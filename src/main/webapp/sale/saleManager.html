@@ -1,0 +1,201 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title></title>
+    <link href="../css/style1.css" rel="stylesheet" type="text/css" />
+    <link href="../css/style2.css" rel="stylesheet" type="text/css" />
+    <script src="../js/jquery-3.6.0.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+        function showOk() {
+            window.showModalDialog("saleOk.html?data=" + Math.random(), "参数", "dialogWidth:550px;dialogHeight:400px;help:no");
+        }
+        function showNo() {
+            window.showModalDialog("saleNo.html?data=" + Math.random(), "参数", "dialogWidth:550px;dialogHeight:400px;help:no");
+        }
+ 	</script>
+</head>
+<body>
+<div id="desDiv">
+    <span>客户开发计划</span><br />
+    制定客户开发计划和记录开发进度
+</div>
+	<form action="likeSalChance01" method="post">
+    <table class="tableEdit">
+        <tr>
+            <th>客户名称：</th>
+            <td><input type="text" name="chcCustName" id="chcCustName" value=""/></td>
+            <th>联系人：</th>
+            <td><input type="text" name="chcLinkman" id="chcLinkman" value="" /></td>
+        </tr>
+        <tr>
+            <th>概要：</th>
+            <td><input type="text"  name="chcTitle" id="chcTitle" value=""/></td>
+            <th>开发状态：</th>
+            <td>
+                <select name="chcStatus" id="chcStatus">
+                	<option value='' selected="selected">全部</option>
+                    <option value='1'>暂未开发</option>
+                    <option value='2'>正开发中</option>
+                    <option value='3'>开发成功</option>
+                    <option value='4'>开发失败</option>
+                </select>
+            </td>
+        </tr>
+        <tfoot>
+            <tr>
+                <td colspan="8">
+                	<input type="submit" value="查询" />
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+    </form>
+    <br />
+<div id="dataDiv">
+    <div id="headDiv">
+    </div>
+    <table class="dataTable">
+        <tr>
+            <th>客户名称</th>
+            <th>概要</th>
+            <th>联系人</th>
+            <th>联系电话</th>
+            <th>创建时间</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        <tr th:each="salChance:${pageInfo.list}">
+			<td>[[${salChance.chcCustName}]]</td>
+            <td>[[${salChance.chcTitle}]]</td>
+            <td>[[${salChance.chcLinkman}]]</td>
+            <td>[[${salChance.chcTel}]]</td>
+            <td>[[${#dates.format(salChance.chcCreateDate,"yyyy年MM月dd日")}]]</td>
+            <td th:if="${salChance.chcStatus} eq 1">暂未开发</td>
+            <td th:if="${salChance.chcStatus} eq 2">正在开发</td>
+            <td th:if="${salChance.chcStatus} eq 3">开发成功</td>
+            <td th:if="${salChance.chcStatus} eq 4">终止开发</td>
+            <td>
+            	<img title="制定计划" th:name="${salChance.chcId}" src="../images/bt_plan.gif" style="border:0px" />
+                <img title="执行计划" th:name="${salChance.chcId}" src="../images/bt_feedback.gif" style="border:0px" />
+                <img title="开发成功" th:name="${salChance.chcId}" src="../images/bt_yes.gif" style="border:0px" />
+                <img title="开发终止" th:name="${salChance.chcId}" src="../images/11.gif" style="border:0px" />
+            </td>
+        </tr>
+    </table>
+    <div id="pageDiv">
+        <div id="leftPage">共有[[${pageInfo.total}]]条记录，当前第[[${pageInfo.pageNum}]]/[[${pageInfo.pages}]]页</div>
+        <div id="rightPage">
+            <input type="image" src="../images/first.gif" onclick="First()" />&nbsp;&nbsp;
+            <input type="image" src="../images/back.gif"  onclick="Pre()"/>&nbsp;&nbsp;
+            <input type="image" src="../images/next.gif"  onclick="Next()"/>&nbsp;&nbsp;
+            <input type="image" src="../images/last.gif"  onclick="Last()"/>&nbsp;&nbsp;
+            转到第<input id="pageNow" type="text" size="1" />&nbsp;&nbsp;
+            <input type="image" src="../images/go.gif" onclick="Page()" />
+        </div>
+        <script type="text/javascript">
+    		function First(){
+    			location.href = "chance01?pageNow=1";
+    		}
+    		function Pre(){
+    			location.href = "chance01?pageNow="+[[${pageInfo.isFirstPage?1:pageInfo.PrePage}]];
+    		}
+    		function Next(){
+    			location.href = "chance01?pageNow="+[[${pageInfo.isLastPage?pageInfo.pages:pageInfo.NextPage}]];
+    		}
+    		function Last(){
+    			location.href = "chance01?pageNow="+[[${pageInfo.pages}]];
+    		}
+    		function Page(){
+    			location.href = "chance01?pageNow="+$("#pageNow").val();
+    		}
+    	</script>
+    	<script type="text/javascript">
+	    	$("img[title='制定计划']").click(function(){
+		  		$.ajax({
+		  	    	url:"findSalChanceStatus",
+		  	    	tyle:"GET",
+		  	    	data:"chcId="+$(this).attr("name"), 
+		  	    	success:function(msg){
+		  	    		if(msg==1){
+		  	      			alert("抱歉机会暂未指派人员，请先指派人员！");
+		  	      			location.href ="/MyCRM/sale/allotSalChance?chcId="+$("img[title='制定计划']").attr("name");
+		  	     		}else{
+		  	      			location.href ="/MyCRM/plan/findSal?chcId="+$("img[title='制定计划']").attr("name");
+		  	     		}
+		  	    	}
+				})
+			})
+			$("img[title='执行计划']").click(function(){
+		  		$.ajax({
+		  	    	url:"findSalChanceStatus",
+		  	    	tyle:"GET",
+		  	    	data:"chcId="+$(this).attr("name"), 
+		  	    	success:function(msg){
+		  	    		if(msg==1){
+		  	      			alert("抱歉机会暂未指派人员，请先指派人员！");
+		  	      			location.href ="/MyCRM/sale/allotSalChance?chcId="+$("img[title='执行计划']").attr("name");
+		  	     		}else{
+		  	      			location.href ="/MyCRM/plan/findSalPlan?chcId="+$("img[title='执行计划']").attr("name");
+		  	     		}
+		  	    	}
+				})
+			})
+			$("img[title='开发成功']").click(function(){
+		  		$.ajax({
+		  	    	url:"findStatusChcId",
+		  	    	tyle:"GET",
+		  	    	data:"chcId="+$(this).attr("name"), 
+		  	    	success:function(msg){
+		  	    		if(msg.substr(1)==3){
+		  	      			alert("已开发完成，请不要重复操作！");
+		  	     		}else{
+		  	     			$.ajax({
+		  			  	    	url:"updateChcStatus",
+		  			  	    	tyle:"GET",
+		  			  	    	data:"chcId="+msg.substr(0,1)+"&chcStatus=3", 
+		  			  	    	success:function(msg){
+		  			  	    		if(msg==true){
+		  			  	      			alert("操作成功！");
+		  			  	      			location.href="/MyCRM/sale/chancePage01";
+		  			  	     		}else{
+		  			  	     			alert("操作失败！");
+		  			  	     		}
+		  			  	    	}
+		  					})
+		  	     		}	
+		  	    	}
+				})
+			})
+			$("img[title='开发终止']").click(function(){
+		  		$.ajax({
+		  	    	url:"findStatusChcId",
+		  	    	tyle:"GET",
+		  	    	data:"chcId="+$(this).attr("name"), 
+		  	    	success:function(msg){
+		  	    		if(msg.substr(1)==4){
+		  	      			alert("已开发终止，请不要重复操作！");
+		  	     		}else{
+		  	     			$.ajax({
+		  			  	    	url:"updateChcStatus",
+		  			  	    	tyle:"GET",
+		  			  	    	data:"chcId="+msg.substr(0,1)+"&chcStatus=4", 
+		  			  	    	success:function(msg){
+		  			  	    		if(msg==true){
+		  			  	      			alert("操作成功！");
+		  			  	      			location.href="/MyCRM/sale/chancePage01";
+		  			  	     		}else{
+		  			  	     			alert("操作失败！");
+		  			  	     		}
+		  			  	    	}
+		  					})
+		  	     		}	
+		  	    	}
+				})
+			})
+			
+    	</script>
+    </div>
+</div>
+</body>
+</html>

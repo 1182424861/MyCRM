@@ -1,0 +1,156 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title></title>
+    <link href="../css/style2.css" rel="stylesheet" type="text/css" />
+    <link href="../css/style1.css" rel="stylesheet" type="text/css" />
+    <script src="../js/jquery-3.6.0.js" type="text/javascript" charset="utf-8"></script>
+    <script src='../js/dateTime.js'type='text/javascript'></script>
+</head>
+<body>
+    <table class="tableEdit">
+        <thead>
+            <tr>
+                <td colspan="4">客户信息</td>
+            </tr>
+        </thead>
+        <tr>
+            <th>客户名称：</th>
+            <td>
+                <input type="text" style="display:none;" name="chcId" id="chcId" th:value="${salChance.chcId}"/>
+                <input type="text" style="width:90px; border:none;" readonly="readonly" name="chcCustName" id="chcCustName" th:value="${salChance.chcCustName}"/>
+            </td>
+            <th>机会来源</th>
+            <td><input type="text" style="width:180px; border:none;" readonly="readonly" name="chcSource" id="chcSource" th:value="${salChance.chcSource}" /></td>
+        </tr>
+        <tr>
+            <th>成功几率：</th>
+            <td>
+                百分之
+                <input type="text" style="width:50px; border:none;" readonly="readonly" name="chcRate" id="chcRate" th:value="${salChance.chcRate}" />
+            </td>
+            <th></th>
+            <td></td>
+        </tr>
+        <tr>
+            <th>联系人：</th>
+            <td>
+            	<input type="text" style="width:90px; border:none;" readonly="readonly" name="chcLinkman" id="" th:value="${salChance.chcLinkman}" />
+            </td>
+            <th>联系电话：</th>
+            <td>
+            	<input type="text" style="width:180px; border:none;" readonly="readonly" name="chcTel" id="chcTel" th:value="${salChance.chcTel}" />
+            </td>
+        </tr>
+        <tr>
+            <th>概要：</th>
+            <td colspan="3">
+            	<input type="text" style="width:305px;border:none;" readonly="readonly" name="chcTitle" id="chcTitle" th:value="${salChance.chcTitle}" />
+            </td>
+        </tr>
+        <tr style="height:100px">
+            <th>机会描述：</th>
+            <td colspan="3" style="vertical-align:top">
+            	<textarea style="width:500px border:none;" readonly="readonly" name="chcDesc" >[[${salChance.chcDesc}]]</textarea>
+            </td>
+        </tr>
+        <tr>
+            <th>创建人：</th>
+            <td>
+            	<input type="text" style="border:none; display:none;" readonly="readonly" name="chcCreateId" th:value="${salChance.chcCreateId}"/>
+            	<input type="text" style="border:none;" readonly="readonly" th:value="${salChance.chcCreateBy}" />
+            </td>
+            <th>创建时间：</th>
+            <td><input type="text" style="border:none;" readonly="readonly" name="chcCreateDate" th:value="${#dates.format(salChance.chcCreateDate,'yyyy年MM月dd日')}"/></td>
+        </tr>
+        <tr>
+            <th>指派人：</th>
+            <td>
+            	<input type="text" style="border:none; display:none;" readonly="readonly" name="chcDueId" th:value="${salChance.chcDueId}"/>
+            	<input type="text" style="border:none;" readonly="readonly" name="chcDueTo" th:value="${salChance.chcDueTo}"/>
+            </td>
+            <th>指派时间：</th>
+            <td><input type="text" style="border:none;" readonly="readonly" name="chcCreateDate" th:value="${#dates.format(salChance.chcDueDate,'yyyy年MM月dd日')}"/></td>
+        </tr>
+    </table>
+    <p></p>
+    
+    <table class="dataTable">
+        <tr>
+            <th>日期</th>
+            <th>计划项</th>
+            <th>操作</th>
+        </tr>
+        
+        <tr th:each="salPlan:${salPlan}">
+            <td>[[${#dates.format(salPlan.plaDate,"yyyy年MM月dd日")}]]</td>
+            <td><input type="text" name="plaTodo" id="plaTodo" style="width:500px" th:value="${salPlan.plaTodo}" /></td>
+            <td>
+            	<img th:name="${salPlan.plaId}" title="保存" style="border: 0px;" src="../images/edt.gif" />&nbsp;&nbsp;
+                <img th:name="${salPlan.plaId}" title="删除" src="../images/del.gif" />
+            </td>
+        </tr>
+    </table>
+   	<script type="text/javascript">
+		  	$("img[title='保存']").click(function(){
+		  		$.ajax({
+		  	    	url:"updateSalPlan",
+		  	    	data:"plaId="+$(this).attr("name")+"&plaTodo="+$(this).parent().prev().find("input").val(), 
+		  	    	success:function(msg){
+		  	    		if(msg==true){
+		  	      			alert("保存成功！");
+		  	     		}else{
+		  	      			alert("保存失败！");
+		  	     		}
+		  	     		location.href ="/MyCRM/sale/chancePage01";
+		  	    	}
+				})
+			})
+			
+			$("img[title='删除']").click(function(){
+		  		$.ajax({
+		  	    	url:"deleteSalPlan",
+		  	    	data:"plaId="+$(this).attr("name"), 
+		  	    	success:function(msg){
+		  	    		if(msg==true){
+		  	      			alert("删除成功！");
+		  	     		}else{
+		  	      			alert("删除失败！");
+		  	     		}
+		  	     		location.href ="/MyCRM/sale/chancePage01";
+		  	    	}
+				})
+				
+			})
+	</script>
+		
+    <p></p>
+    <form action="addSalPlan" method="post">
+	    <table class="tableEdit">
+	        <thead>
+	            <tr>
+	                <td colspan="4">新增计划</td>
+	            </tr>
+	        </thead>
+	        <tr>
+	            <th>日期：</th>
+	            <td>
+	                <input type="date" name="plaDate" id="dateTime" />
+	            </td>
+	            <th>计划项</th>
+	            <td><input type="text" name="plaTodo" style="width:500px" /></td>
+	        </tr>
+	        <tfoot>
+	            <tr>
+	                <td colspan="4">
+	                	<input type="text" style="display:none;" name="plaChcId" id="plaChcId" th:value="${salChance.chcId}"/>
+	                    <input type="submit" value="添加" style="margin:auto 360px;" />&nbsp;&nbsp;
+	                    <input type="button" value="返回" onclick="location.href='/MyCRM/sale/chancePage01'" />
+	                </td>
+	            </tr>
+	        </tfoot>
+	    </table>
+    </form>
+</body>
+</html>

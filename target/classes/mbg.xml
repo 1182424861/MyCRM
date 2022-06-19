@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC  "-//mybatis.org//DTD MyBatis Generator  Configuration 1.0//EN"  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+	<context id="DB2Tables" targetRuntime="MyBatis3">
+		<!-- 配置内置的或者自定义的Plugin -->
+		<plugin type="org.mybatis.generator.plugins.SerializablePlugin" />
+		<commentGenerator>
+			<property name="suppressAllComments" value="true" />
+		</commentGenerator>
+		<!-- 数据库链接URL、用户名、密码 -->
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://127.0.0.1:3306/mycrm" userId="root"
+			password="123456">
+		</jdbcConnection>
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+		<!-- 生成模型的包名和位置 -->
+		<javaModelGenerator targetPackage="com.crm.ssm.entity"
+			targetProject=".\src\main\java">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+		<!-- 生成的Mapper接口和位置 -->
+		<sqlMapGenerator targetPackage="com.crm.ssm.mapper"
+			targetProject=".\src\main\resources">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+		<!-- 生成Mapper配置文件和位置 -->
+		<javaClientGenerator type="XMLMAPPER"
+			targetPackage="com.crm.ssm.mapper" targetProject=".\src\main\java">
+			<property name="enableSubPackages" value="true" />
+		</javaClientGenerator>
+		<!-- 要生成哪些表(更改tableName和domainObjectName就可以) -->
+		<table tableName="%" />
+	</context>
+</generatorConfiguration>

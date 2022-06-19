@@ -1,0 +1,178 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title></title>
+    <link href="../css/style2.css" rel="stylesheet" type="text/css" />
+    <link href="../css/style4.css" rel="stylesheet" type="text/css" />
+    <script src="../js/jquery-3.6.0.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+    <div id="desDiv">
+        <span>客户信息管理</span><br />
+        维护客户信息，记录客户联系电话和交往记录
+    </div>
+    <form action="likeCstCustom" method="get">
+    <table class="tableEdit">
+        <tr>
+            <th>
+                客户名称：
+            </th>
+            <td>
+                <input type="text" name="custName" value=""/>
+            </td>
+            <th>
+                客户编号：
+            </th>
+            <td>
+                <input type="text" name="custNo" value=""/>
+            </td>
+            <th>
+                地区：
+            </th>
+            <td>
+                <select name="custRegion">
+                    <option value="" selected="selected">全部</option>
+                    <option value="东北" >东北</option>
+                    <option value="华北" >华北</option>
+                    <option value="华中" >华中</option>
+                    <option value="华南" >华南</option>
+                    <option value="华东" >华东</option>
+                    <option value="西北" >西北</option>
+                    <option value="西南" >西南</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                客户经理：
+            </th>
+            <td>
+                <input type="text" name="custManagerName" value=""/>
+            </td>
+            <th>
+                客户等级：
+            </th>
+            <td>
+                <select name="custLevel">
+                    <option value="" selected="selected">全部</option>
+                    <option value="1" >战略合作伙伴</option>
+                    <option value="2" >合作伙伴</option>
+                    <option value="3" >大客户</option>
+                    <option value="4" >普通客户</option>
+                </select>
+            </td>
+            <th></th><td></td>
+        </tr>
+        <tfoot>
+            <tr>
+                <td colspan="8">
+                    <input type="submit" value="查询" />
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+    </form>
+    <br />
+            <table class="dataTable">
+                <tr>
+                    <th>
+                        客户编号
+                    </th>
+                    <th>
+                        客户名称
+                    </th>
+                    <th>
+                        地区
+                    </th>
+                    <th>
+                        客户经理
+                    </th>
+                    <th>
+                        客户等级
+                    </th>
+                    <th>
+                        建立时间
+                    </th>
+                    <th>
+                        操作
+                    </th>
+                </tr>
+                <tr th:each="customer:${pageInfo.list}">
+                    <td>
+                        [[${customer.custNo}]]
+                    </td>
+                    <td>
+                        [[${customer.custName}]]
+                    </td>
+                    <td>
+                        [[${customer.custRegion}]]
+                    </td>
+                    <td>
+                        [[${customer.custManagerName}]]
+                    </td>
+                    <td th:if="${customer.custLevel} eq 1 ">战略合作伙伴</td>
+            		<td th:if="${customer.custLevel} eq 2 ">合作伙伴</td>
+            		<td th:if="${customer.custLevel} eq 3 ">大客户</td>
+            		<td th:if="${customer.custLevel} eq 4 ">普通客户</td>
+                    <td>
+                        [[${#dates.format(customer.cstService.svrCreateDate,"yyyy年MM月dd日")}]]
+                    </td>
+                    <td>
+                        <a th:href="'findCstById?custNo='+${customer.custNo}"><img src="../images/33.gif" title="编辑" style="border:0px" /></a>
+                        <a th:href="'/MyCRM/lkm/findLkmByNo?custNo='+${customer.custNo}"><img src="../images/bt_linkman.gif" title="联系人" style="border:0px;width:16px;height:16px" /></a>
+                        <a th:href="'/MyCRM/atv/findAtvByNo?custNo='+${customer.custNo}"><img src="../images/bt_acti.gif" title="交往记录" style="border:0px" /></a>
+                        <a th:href="'/MyCRM/ord/findOrdByName?custNo='+${customer.custNo}+'&custName='+${customer.custName}"><img src="../images/bt_orders.gif" title="历史订单" style="border:0px" /></a>
+                        <img src="../images/bt_del.gif" title="删除" th:name="${customer.custNo}" style="border:0px" />
+                    </td>
+                </tr>
+            </table>
+            <div id="pageDiv">
+                <div id="leftPage">共有[[${pageInfo.total}]]条记录，当前第[[${pageInfo.pageNum}]]/[[${pageInfo.pages}]]页</div>
+        		<div id="rightPage">
+           			<input type="image" src="../images/first.gif" onclick="First()" />&nbsp;&nbsp;
+            		<input type="image" src="../images/back.gif"  onclick="Pre()"/>&nbsp;&nbsp;
+            		<input type="image" src="../images/next.gif"  onclick="Next()"/>&nbsp;&nbsp;
+            		<input type="image" src="../images/last.gif"  onclick="Last()"/>&nbsp;&nbsp;
+            		转到第<input id="pageNow" type="text" size="1" />&nbsp;&nbsp;
+            		<input type="image" src="../images/go.gif" onclick="Page()"/>
+        		</div>
+        	</div>
+        <script type="text/javascript">
+    		function First(){
+    			location.href = "custom?pageNow=1";
+    		}
+    		function Pre(){
+    			location.href = "custom?pageNow="+[[${pageInfo.isFirstPage?1:pageInfo.PrePage}]];
+    		}
+    		function Next(){
+    			location.href = "custom?pageNow="+[[${pageInfo.isLastPage?pageInfo.pages:pageInfo.NextPage}]];
+    		}
+    		function Last(){
+    			location.href = "custom?pageNow="+[[${pageInfo.pages}]];
+    		}
+    		function Page(){
+    			location.href = "custom?pageNow="+$("#pageNow").val();
+    		}
+    	</script>
+    	<script type="text/javascript">
+		   	$("img[title='删除']").click(function(){
+		  		$.ajax({
+		  	    	url:"deleteCst",
+		  	    	tyle:"GET",
+		  	    	data:"custNo="+$(this).attr("name"), 
+		  	    	success:function(msg){
+		  	    		if(msg>0){
+		  	      			alert("删除成功！");
+		  	      			location.href="cstCustomPage";
+		  	     		}else{
+		  	     			alert("删除失败！");
+		  	      			location.href="cstCustomPage";
+		  	     		}
+		  	    	}
+				})
+			})
+    	
+    	</script>
+</body>
+</html>

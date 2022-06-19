@@ -1,0 +1,119 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title></title>
+    <link href="../css/style2.css" rel="stylesheet" type="text/css" />
+    <script src="../js/jquery-3.6.0.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+<table class="tableEdit" style="width:500px;">
+        <thead>
+            <tr>
+                <td colspan="4">
+                	服务信息
+                	<input type="text" name="svrStatus" id="svrStatus" th:value="${service.svrStatus}" style="display:none;" />
+                </td>
+            </tr>
+        </thead>
+        <tr>
+            <th>客户姓名：</th>
+            <td>[[${service.svrCustName}]]</td>
+            <th>服务类型：</th>
+            <td>
+                [[${service.svrType}]]
+            </td>
+        </tr>
+        <tr>
+            <th>服务概要：</th>
+            <td colspan="3">
+               [[${service.svrTitle}]]
+             </td>
+        </tr>
+        <tr>
+            <th>详细信息：</th>
+            <td colspan="3">
+               [[${service.svrRequest}]]
+             </td>
+        </tr>
+    <tr>
+        <th>创建人：</th>
+        <td>
+            [[${service.svrCreateBy}]]
+        </td>
+        <th>创建时间：</th>
+        <td>
+            [[${#dates.format(service.svrCreateDate,"yyyy年MM月dd日")}]]
+        </td>
+    </tr>
+    </table>
+ <table class="tableEdit" style="width:500px;">
+        <thead>
+            <tr>
+                <td colspan="4">服务处理</td>
+            </tr>
+        </thead>
+        <tr>
+            <th>服务处理：</th>
+            <td colspan="3">
+                [[${service.svrDeal}]]
+             </td>
+        </tr>
+     <tr>
+         <th>处理人：</th>
+         <td>
+             [[${service.svrDealBy}]]
+         </td>
+         <th>处理时间：</th>
+         <td>
+             [[${#dates.format(service.svrDealDate,"yyyy年MM月dd日")}]]
+         </td>
+     </tr>
+    </table>
+    <table class="tableEdit" style="width:500px;">
+        <thead>
+            <tr>
+                <td colspan="4">服务反馈</td>
+            </tr>
+        </thead>
+        <tr>
+            <th>满意度：</th>
+            <td>
+                <span th:if="${service.svrSatisfy} eq 100">☆☆☆☆☆</span>
+                <span th:if="${service.svrSatisfy} eq 90">☆☆☆☆</span>
+                <span th:if="${service.svrSatisfy} eq 80">☆☆☆</span>
+                <span th:if="${service.svrSatisfy} eq 70">☆☆</span>
+                <span th:if="${service.svrSatisfy} eq 60">☆</span>
+            </td>
+        </tr>
+        <tr>
+            <th>处理结果：</th>
+            <td>
+                [[${service.svrResult}]]
+             </td>
+        </tr>
+        <tfoot>
+            <tr>
+                <td colspan="4">
+                     <input type="button" id="fanhui" th:name="${service.svrId}" value="返回"/>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+    <script type="text/javascript">
+	   	$("#fanhui").click(function(){
+	   		$.ajax({
+	  	    	url:"updateSvr",
+	  	    	tyle:"GET",
+	  	    	data:{
+	  	    			svrId:$(this).attr("name"),
+	  	    			svrStatus:$("#svrStatus").val()
+	  	    		 },
+		  		success:function(msg){
+	  	    		location.href="servicePage?a=4";
+			    }
+			})	
+	   	})
+	</script>
+</body>
+</html>

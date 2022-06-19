@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title></title>
+    <link href="../css/style1.css" rel="stylesheet" type="text/css" />
+    <link href="../css/style2.css" rel="stylesheet" type="text/css" />
+    <script src="../js/jquery-3.6.0.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+<div id="desDiv">
+    <span>客户联系人管理</span><br />
+    管理客户的相关联系人信息
+</div>
+    <table class="tableEdit">
+        <tr>
+            <th>
+                客户编号： 
+            </th>
+            <td>
+                [[${list.get(0).LkmCustNo}]]
+            </td>
+            <th>
+                客户名称：
+            </th>
+            <td>
+                [[${list.get(0).LkmCustName}]]
+            </td>
+        </tr>
+    </table>
+    <div id="dataDiv">
+    <div id="headDiv">
+        <img src="../images/22.gif" />&nbsp;&nbsp;<a th:href="'findCustNoName?lkmCustNo='+${list.get(0).LkmCustNo}+'&lkmCustName='+${list.get(0).LkmCustName}">新建</a>
+    </div>
+    <table class="dataTable">
+            <tr>
+                <th>
+                    姓名
+                    <input type="text" name="lkmCustNo" id="lkmCustNo" style="display:none;" th:value="${list.get(0).LkmCustNo}"/>
+                </th>
+                <th>
+                    性别
+                </th>
+                <th>
+                    职位
+                </th>
+                <th>
+                    固定电话
+                </th>
+                <th>
+                    手机号码
+                </th>
+                <th>备注</th>
+                <th>
+                    操作
+                </th>
+            </tr>
+            <tr th:each="lkm:${list}">
+                <td>
+                    [[${lkm.lkmName}]]
+                </td>
+                <td>
+                    [[${lkm.lkmSex}]]
+                </td>
+                <td>
+                    [[${lkm.lkmPostion}]]
+                </td>
+                <td>
+                    [[${lkm.lkmTel}]]
+                </td>
+                <td>
+                    [[${lkm.lkmMobile}]]
+                </td>
+                <td>
+                	[[${lkm.lkmMemo}]]
+                </td>
+                <td>
+                <a th:href="'findLkmById?lkmId='+${lkm.lkmId}"><img title="编辑" src="../images/33.gif" style="border:0px"/></a>&nbsp;
+                <img title="删除" th:name="${lkm.lkmId}" src="../images/11.gif" />
+                </td>
+            </tr>
+       </table>
+    </div>
+    <script type="text/javascript">
+    	$("img[title='删除']").click(function(){
+    		$.ajax({
+	  	    	url:"deleteLkm",
+	  	    	tyle:"GET",
+	  	    	data:"lkmId="+$(this).attr("name"),
+		  		success:function(msg){
+		  			if(msg>0){ 
+	  	    			alert("删除成功！");
+	  	    			location.href="findLkmByNo?custNo="+$('#lkmCustNo').val();
+	  	    		}else{
+	  	    			alert("删除失败！");
+	  	    			location.href="findLkmByNo?custNo="+$('#lkmCustNo').val();
+	  	    		}
+			    }
+			})	
+    	})
+    </script>
+</body>
+</html>

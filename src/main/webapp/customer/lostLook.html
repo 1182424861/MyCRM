@@ -1,0 +1,50 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title></title>
+    <link href="../css/style2.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <table class="tableEdit">
+        <thead>
+            <tr>
+                <td colspan="4">确认流失</td>
+            </tr>
+        </thead>
+        <tr>
+            <th>客户编号：</th>
+            <td>
+                [[${lost.lstCustNo}]]
+            </td>
+            <th>客户姓名：</th>
+            <td>[[${lost.lstCustName}]]</td>
+        </tr>
+        <tr>
+            <th>客户经理：</th>
+            <td>[[${lost.lstCustManagerName}]]</td>
+            <th>最后下单时间：</th>
+            <td>${#dates.format(lost.lstLastOrderDate,'yyyy年MM月dd日')}</td>
+        </tr>
+        <tr>
+            <th>暂缓措施：</th>
+            <td colspan="3">
+                <span th:each="lstDelay:${lstD}">[[${lstDelay.lstDelay}]]<br/></span>
+            </td>
+        </tr>
+        <tr>
+            <th>流失原因：</th>
+            <td colspan="3">
+                [[${lstDelay.lstReason}]]
+            </td>
+        </tr>
+        <tfoot>
+            <tr>
+                <td colspan="4">
+                    <input type="button" onclick="location.href='cstLostPage'" value="返回" />
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</body>
+</html>

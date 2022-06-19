@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <link href="../css/style2.css" rel="stylesheet" type="text/css" />
+    <script src="../js/jquery-3.6.0.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+        function showCustomer() {
+            var returnValue = window.showModalDialog("../publicPage/SelectCustomer.html?data=" + Math.random(), "参数", "dialogWidth:400px;dialogHeight:220px;help:no");
+        }
+    </script>
+</head>
+<body>
+<table class="tableEdit" style="width:600px;">
+        <thead>
+            <tr>
+                <td colspan="4">创建服务</td>
+            </tr>
+        </thead>
+        <tr>
+            <th>客户姓名：</th>
+            <td>
+                <input type="text" ondblclick="showCustomer()" name="svrCustName" id="svrCustName" /></td>
+            <th>服务类型：</th>
+            <td>
+                <select style="width:100px" name="svrType" id="svrType">
+                    <option value="咨询" selected="selected">咨询</option>
+                    <option value="投诉">投诉</option>
+                    <option value="建议">建议</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>服务概要：</th>
+            <td colspan="3">
+                <input type="text"  style="width:300px" name="svrTitle" id="svrTitle" />
+             </td>
+        </tr>
+        <tr>   
+            <th>详细信息：</th>
+            <td colspan="3">
+                <textarea name="svrRequest" id="svrRequest"></textarea>
+             </td>
+        </tr>
+        <tfoot>
+            <tr>
+                <td colspan="4">
+                    <input type="button" id="queding" value="确定" />&nbsp;&nbsp;
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+    <script type="text/javascript">
+    	$("#queding").click(function(){
+	  		$.ajax({
+	  	    	url:"/MyCRM/ser/insertCstSer",
+	  	    	tyle:"GET",
+	  	    	data:{
+	  	    		svrType:$("#svrType").val(),
+	  	    		svrTitle:$("#svrTitle").val(),
+	  	    		svrCustName:$("#svrCustName").val(),
+	  	    		svrRequest:$("#svrRequest").val()
+	  	    	},
+	  	    	success:function(msg){
+	  	    		if(msg>0){
+	  	      			alert("新建服务成功！");
+	  	      			location.href ="serviceCreate.html";
+	  	     		}else{
+	  	     			alert("新建服务失败！");
+	  	     			location.href ="serviceCreate.html";
+	  	     		}
+	  	    	}
+			})
+		})
+	</script>
+</body>
+</html>

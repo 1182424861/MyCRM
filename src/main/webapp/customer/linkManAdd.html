@@ -1,0 +1,81 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title></title>
+    <link href="../css/style2.css" rel="stylesheet" type="text/css" />
+    <script src="../js/jquery-3.6.0.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+    <table class="tableEdit">
+        <thead>
+            <tr>
+                <td colspan="4">新建联系人</td>
+            </tr>
+        </thead>
+        <tr>
+            <th>姓名：</th>
+            <td>
+            	<input type="text" name="lkmCustNo" id="lkmCustNo" style="display:none;" th:value="${cst.custNo}"/>
+            	<input type="text" name="lkmCustName" id="lkmCustName" style="display:none;" th:value="${cst.custName}"/>
+                <input type="text" name="lkmName" id="lkmName" value="" />
+            </td>
+            <th>性别：</th>
+            <td>
+                <input type="radio" name="lkmSex" id="lkmSex" value="男" checked="checked" />男&nbsp;&nbsp;<input name="lkmSex" id="lkmSex" value="女" type="radio" />女
+            </td>
+        </tr>
+        <tr>
+            <th>职位：</th>
+            <td><input type="text" name="lkmPostion" id="lkmPostion" /></td>
+            <th>固定电话：</th>
+            <td><input type="text" name="lkmTel" id="lkmTel" /></td>
+        </tr>
+        <tr>
+            <th>手机号码：</th>
+            <td><input type="text" name="lkmMobile" id="lkmMobile" /></td>
+            <th></th>
+            <td></td>
+        </tr>
+        <tr>
+            <th>备注：</th>
+            <td colspan="3"><textarea name="lkmMemo" id="lkmMemo" ></textarea></td>
+        </tr>
+        <tfoot>
+            <tr>
+                <td colspan="4">
+                    <input type="button" id="queding" value="确定" />&nbsp;&nbsp;
+                    <input type="button" value="关闭" onclick="location.href='findLkmByNo?custNo='+$('#lkmCustNo').val()" />
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+    <script type="text/javascript">
+    	$("#queding").click(function(){
+    		$.ajax({
+	  	    	url:"addLinkman",
+	  	    	tyle:"GET",
+	  	    	data:{
+	  	    			lkmCustNo:$("#lkmCustNo").val(),
+	  	    			lkmCustName:$("#lkmCustName").val(),
+	  	    			lkmName:$("#lkmName").val(),
+						lkmSex:$("input[name='lkmSex']:checked").val(),
+	  	    		 	lkmPostion:$("#lkmPostion").val(),
+	  	    		 	lkmTel:$("#lkmTel").val(),
+	  	    		 	lkmMobile:$("#lkmMobile").val(),
+	  	    		 	lkmMemo:$("#lkmMemo").val()
+	  	    		 },
+		  		success:function(msg){
+		  			if(msg>0){ 
+	  	    			alert("添加联系人成功！");
+	  	    			location.href="findLkmByNo?custNo="+$("#lkmCustNo").val();
+	  	    		}else{
+	  	    			alert("添加联系人失败！");
+	  	    			location.href="findCustNoName?lkmCustNo="+$("#lkmCustNo").val()+"$lkmCustName="+$("#lkmCustName").val();
+	  	    		}
+			    }
+			})	
+    	})
+    </script>
+</body>
+</html>

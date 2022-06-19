@@ -1,0 +1,206 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title></title>
+    <link href="../css/style2.css" rel="stylesheet" type="text/css" />
+    <script src="../js/jquery-3.6.0.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+<table class="tableEdit">
+        <thead>
+            <tr>
+                <td colspan="4">客户基本信息</td>
+            </tr>
+        </thead>
+        <tr>
+            <th>客户编号：</th>
+            <td>
+            	<input type="text" style="border:none;" readonly="readonly" name="custNo" id="custNo" th:value="${customer.custNo}"/>
+            </td>
+            <th>客户经理：</th>
+            <td>
+            	[[${customer.custManagerName}]]
+            </td>
+        </tr>
+        <tr>
+            <th>客户名称：</th>
+            <td>
+                <input type="text" name="custName" id="custName" th:value="${customer.custName}"/>
+             </td>
+            <th>地区：</th>
+            <td>
+                <select name="custRegion" id="custRegion">
+                    <option selected="selected" th:value="${customer.custRegion}" >[[${customer.custRegion}]]</option>
+                    <option th:if="${customer.custRegion} ne '东北'" value="东北" >东北</option>
+                    <option th:if="${customer.custRegion} ne '华北'" value="华北" >华北</option>
+                    <option th:if="${customer.custRegion} ne '华中'" value="华中" >华中</option>
+                    <option th:if="${customer.custRegion} ne '华南'" value="华南" >华南</option>
+                    <option th:if="${customer.custRegion} ne '华东'" value="华东" >华东</option>
+                    <option th:if="${customer.custRegion} ne '西北'" value="西北" >西北</option>
+                    <option th:if="${customer.custRegion} ne '西南'" value="西南" >西南</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>客户等级：</th>
+            <td>
+                <select name="custLevel" id="custLevel">
+                	<option th:if="${customer.custLevel} eq 1 " value="1" selected="selected" >战略合作伙伴</option>
+                    <option th:if="${customer.custLevel} eq 2 " value="2" selected="selected" >合作伙伴</option>
+                    <option th:if="${customer.custLevel} eq 3 " value="3" selected="selected" >大客户</option>
+                    <option th:if="${customer.custLevel} eq 4 " value="4" selected="selected" >普通客户</option>
+                    <option th:if="${customer.custLevel} ne 1 " value="1" >战略合作伙伴</option>
+                    <option th:if="${customer.custLevel} ne 2 " value="2" >合作伙伴</option>
+                    <option th:if="${customer.custLevel} ne 3 " value="3" >大客户</option>
+                    <option th:if="${customer.custLevel} ne 4 " value="4" >普通客户</option>
+                </select>
+             </td>
+            <th></th>
+            <td></td>
+        </tr>
+        <tr>
+            <th>客户满意度：</th>
+            <td>
+                <select name="custSatisfy" id="custSatisfy">
+                	<option th:if="${customer.custSatisfy} eq 60 " value="60" selected="selected" >☆</option>
+                    <option th:if="${customer.custSatisfy} eq 70 " value="70" selected="selected" >☆☆</option>
+                    <option th:if="${customer.custSatisfy} eq 80 " value="80" selected="selected" >☆☆☆</option>
+                    <option th:if="${customer.custSatisfy} eq 90 " value="90" selected="selected" >☆☆☆☆</option>
+                    <option th:if="${customer.custSatisfy} eq 100 " value="100" selected="selected" >☆☆☆☆☆</option>
+                    <option th:if="${customer.custSatisfy} ne 60 " value="60" >☆</option>
+                    <option th:if="${customer.custSatisfy} ne 70 " value="70" >☆☆</option>
+                    <option th:if="${customer.custSatisfy} ne 80 " value="80" >☆☆☆</option>
+                    <option th:if="${customer.custSatisfy} ne 90 " value="90" >☆☆☆☆</option>
+                    <option th:if="${customer.custSatisfy} ne 100 " value="100" >☆☆☆☆☆</option>
+                </select>
+             </td>
+            <th>客户信用度：</th>
+            <td>
+                <select name="custCredit" id="custCredit">
+                    <option th:if="${customer.custCredit} eq 6 " value="6" selected="selected" >☆</option>
+                    <option th:if="${customer.custCredit} eq 7 " value="7" selected="selected" >☆☆</option>
+                    <option th:if="${customer.custCredit} eq 8 " value="8" selected="selected" >☆☆☆</option>
+                    <option th:if="${customer.custCredit} eq 9 " value="9" selected="selected" >☆☆☆☆</option>
+                    <option th:if="${customer.custCredit} eq 10 " value="10" selected="selected" >☆☆☆☆☆</option>
+                    <option th:if="${customer.custCredit} ne 6 " value="6" >☆</option>
+                    <option th:if="${customer.custCredit} ne 7 " value="7" >☆☆</option>
+                    <option th:if="${customer.custCredit} ne 8 " value="8" >☆☆☆</option>
+                    <option th:if="${customer.custCredit} ne 9 " value="9" >☆☆☆☆</option>
+                    <option th:if="${customer.custCredit} ne 10 " value="10" >☆☆☆☆☆</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+    <p></p>
+    <table class="tableEdit">
+        <thead>
+            <tr>
+                <td colspan="4">客户联系信息</td>
+            </tr>
+        </thead>
+        <tr>
+            <th>地址：</th>
+            <td>
+                <input type="text" style="width:300px" name="custAddr" id="custAddr" th:value="${customer.custAddr}" />
+            </td>
+            <th>邮编：</th>
+            <td>
+                <input type="text" name="custZip" id="custZip" th:value="${customer.custZip}" />
+            </td>
+        </tr>
+        <tr>
+            <th>电话：</th>
+            <td>
+                <input type="text" name="custTel" id="custTel" th:value="${customer.custTel}" />
+            </td>
+            <th>传真：</th>
+            <td>
+                <input type="text" name="custFax" id="custFax" th:value="${customer.custFax}" />
+            </td>
+        </tr>
+        <tr>
+            <th>网咨：</th>
+            <td>
+                <input type="text" name="custWebsite" id="custWebsite" th:value="${customer.custWebsite}" />
+            </td>
+            <th></th><td></td>
+        </tr>
+    </table>
+    <p></p>
+    <table class="tableEdit">
+        <thead>
+            <tr>
+                <td colspan="4">公司信息</td>
+            </tr>
+        </thead>
+        <tr>
+            <th>营业执照号：</th>
+            <td>
+                <input type="text" name="custLicenceNo" id="custLicenceNo" th:value="${customer.custLicenceNo}" />
+            </td>
+            <th>法人：</th>
+            <td>
+                <input type="text" name="custChieftain" id="custChieftain" th:value="${customer.custChieftain}"/>
+            </td>
+        </tr>
+        <tr>
+            <th>注册资金(万元)：</th>
+            <td>
+                <input type="text" name="custBankroll" id="custBankroll" th:value="${customer.custBankroll}"/>
+            </td>
+            <th>年营业额：</th>
+            <td>
+                <input type="text" name="custTurnover" id="custTurnover" th:value="${customer.custTurnover}"/>
+            </td>
+        </tr>
+        <tr>
+            <th>开户银行：</th>
+            <td>
+                <input type="text" name="custBank" id="custBank" th:value="${customer.custBank}"/>
+            </td>
+            <th>银行账号：</th>
+            <td>
+                <input type="text" name="custBankAccount" id="custBankAccount" th:value="${customer.custBankAccount}"/>
+            </td>
+        </tr>
+        <tr>
+            <th>地税登记号：</th>
+            <td>
+                <input type="text" name="custLocalTaxNo" id="custLocalTaxNo" th:value="${customer.custLocalTaxNo}"/>
+            </td>
+            <th>国税登记号：</th>
+            <td>
+                <input type="text" name="custNationalTaxNo" id="custNationalTaxNo" th:value="${customer.custNationalTaxNo}"/>
+            </td>
+        </tr>
+    </table>
+    <p></p>
+    <input type="button" id="baocun" value="保存" />&nbsp;&nbsp;
+    <input type="button" value="返回" onclick="location.href='/MyCRM/cust/cstCustomPage'"/>
+    <script type="text/javascript">
+    	$("#baocun").click(function(){
+    		$.ajax({
+	  	    	url:"updateCst",
+	  	    	tyle:"GET",
+	  	    	data:"custNo="+$("#custNo").val()+"&custName="+$("#custName").val()+"&custRegion="+$("#custRegion").val()
+	  	    		 +"&custLevel="+$("#custLevel").val()+"&custSatisfy="+$("#custSatisfy").val()
+	  	    		 +"&custCredit="+$("#custCredit").val()+"&custAddr="+$("#custAddr").val()+"&custZip="+$("#custZip").val()
+					 +"&custTel="+$("#custTel").val()+"&custFax="+$("#custFax").val()+"&custWebsite="+$("#custWebsite").val()
+					 +"&custLicenceNo="+$("#custLicenceNo").val()+"&custBankAccount="+$("#custBankAccount").val()
+					 +"&custLocalTaxNo="+$("#custLocalTaxNo").val()+"&custNationalTaxNo="+$("#custNationalTaxNo").val(), 
+	  	    	success:function(msg){
+	  	    		if(msg>0){ 	
+	  	    			alert("保存成功！");
+	  	    			location.href="/MyCRM/cust/cstCustomPage";
+	  	    		}else{
+	  	    			alert("保存失败！");
+	  	    			location.href="/MyCRM/cust/findCstById?csutNo="+[[${customer.custNo}]];
+	  	    		}
+	  	    	}
+			})
+    	})
+    
+    </script>
+</body>
+</html>

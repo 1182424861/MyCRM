@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:task="http://www.springframework.org/schema/task"
+    
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        https://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc
+        https://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/task
+        https://www.springframework.org/schema/task/spring-task.xsd">
+
+    <!-- 开启SpringMVC的注解 -->
+    <mvc:annotation-driven>
+    	<mvc:message-converters>
+    		<!-- 配置JSON中文编码 -->
+        <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+             <property name="supportedMediaTypes" value="text/html;charset=utf-8"></property>
+             <property name="defaultCharset" value="utf-8"></property>
+         </bean>
+    	</mvc:message-converters>
+    </mvc:annotation-driven>
+    
+    <!-- 配置拦截器列表 -->
+	<mvc:interceptors>
+		<!-- 配置拦截器 -->
+		<mvc:interceptor>
+			<!-- 要拦截的路径 -->
+			<mvc:mapping path="/**"/>
+			<!-- 不需要拦截的路径 -->
+			<mvc:exclude-mapping path="/login.html"/>
+			<mvc:exclude-mapping path="/login"/>
+			<mvc:exclude-mapping path="/css/**"/>
+			<mvc:exclude-mapping path="/js/**"/>
+			<mvc:exclude-mapping path="/images/**"/>
+			<!-- 拦截器的限定名 -->
+			<bean class="com.crm.ssm.interceptor.LoginInterceptor"></bean>
+		</mvc:interceptor>
+	</mvc:interceptors>
+	
+	<!-- 配置定时任务 -->
+	<task:annotation-driven scheduler="scheduler"/>
+	<task:scheduler id="scheduler" pool-size="5"/>
+    
+    
+</beans>

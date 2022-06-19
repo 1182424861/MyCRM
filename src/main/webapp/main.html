@@ -1,0 +1,267 @@
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>CRM客户关系管理系统</title>
+<link href="css/left.css" rel="stylesheet" type="text/css" />
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="js/jquery-easyui-1.4.1/jquery.easyui.min.js"
+	type="text/javascript"></script>
+<link href='js/jquery-easyui-1.4.1/themes/color.css' rel='stylesheet'
+	type='text/css' />
+<link href='js/jquery-easyui-1.4.1/themes/gray/easyui.css'
+	rel='stylesheet' type='text/css' />
+<link href='js/jquery-easyui-1.4.1/themes/icon.css' rel='stylesheet'
+	type='text/css' />
+<script src='js/jquery-easyui-1.4.1/locale/easyui-lang-zh_CN.js'
+	type='text/javascript'></script>
+<style type="text/css">
+body {
+	margin: 0px;
+}
+
+.STYLE1 {
+	font-size: 12px;
+	color: #FFFFFF;
+}
+
+.STYLE2 {
+	font-size: 9px;
+}
+
+.STYLE3 {
+	color: #033d61;
+	font-size: 12px;
+}
+</style>
+<script type="text/javascript">
+	console.log()
+	$(function() {
+		$(".menuDiv").click(function() {
+			$(this).next("div").slideToggle(300);
+		});
+	});
+	
+	$(function() {
+		$("span").click(function() {
+			var a = $(this).children("a")
+			var url = a.attr("url");
+			$("#page").attr("src", url);
+		});
+	});
+	
+	//鼠标悬浮登出按钮上改变鼠标样式
+	$(function() {
+		$("#dengchu").bind("mouseover", function() {
+			$(this).css("cursor", "pointer");
+		})
+	})
+
+	//获取时间
+	function showTime() {
+		var t = new Date();//获取当前时间
+		var year = t.getFullYear();//获取当前时间的年份
+		var month = t.getMonth();//获取当前时间的月份
+		var day = t.getDate();//获取当前时间的日
+		var week = t.getDay();//获取当前时间的星期
+		var arr = new Array("星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六");//将字符串放入数组，通过当前时间的星期(为数字)得到星期几
+		var hour = t.getHours();//获取当前时间的小时数
+		var minute = t.getMinutes();//获取当前时间的分钟数
+		var second = t.getSeconds();//获取当前时间的秒数
+		var Time = year + "/" + month + "/" + day + " " + arr[week] + " "
+				+ hour + ((minute < 10) ? ":0" : ":") + minute
+				+ ((second < 10) ? ":0" : ":") + second
+				+ ((hour > 12) ? ".pm" : ".am");
+		document.getElementById("time").innerHTML = Time;
+	}
+	//每秒钟刷新一下时间
+	setInterval("showTime()", 1000);
+</script>
+</head>
+<body class="easyui-layout">
+	<div data-options="region:'north',split:false" style="height: 102px">
+		<table width="100%" border="0" cellspacing="0" cellpadding="0">
+			<tr>
+				<td height="70" background="images/main_05.gif">
+					<table width="100%" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td height="24">
+								<table width="100%" border="0" cellspacing="0" cellpadding="0">
+									<tr>
+										<td width="270" height="24" background="images/main_03.gif">&nbsp;</td>
+										<td width="505" background="images/main_04.gif">&nbsp;</td>
+										<td>&nbsp;</td>
+										<td width="21">
+											<img src="images/main_07.gif" width="21" height="24" />
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td height="38">
+								<table width="100%" border="0" cellspacing="0" cellpadding="0">
+									<tr>
+										<td width="270" height="38" background="images/main_09.gif">&nbsp;</td>
+										<td>
+											<table width="100%" border="0" cellspacing="0" cellpadding="0">
+												<tr>
+													<td width="77%" height="25" valign="bottom">
+														<table width="100%" border="0" cellspacing="0" cellpadding="0"></table>
+													</td>
+													<td width="220" valign="bottom" nowrap="nowrap">
+														<div align="right">
+															<span class="STYLE1">
+																<span class="STYLE2" id="time">■</span>
+															</span>
+														</div>
+													</td>
+												</tr>
+											</table>
+										</td>
+										<td width="21"><img src="images/main_11.gif" width="21" height="38" /></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td height="8" style="line-height: 8px;">
+								<table width="100%" border="0" cellspacing="0" cellpadding="0">
+									<tr>
+										<td width="270" background="images/main_29.gif"
+											style="line-height: 8px;">&nbsp;</td>
+										<td width="505" background="images/main_30.gif"
+											style="line-height: 8px;">&nbsp;</td>
+										<td style="line-height: 8px;">&nbsp;</td>
+										<td width="21" style="line-height: 8px;"><img
+											src="images/main_31.gif" width="21" height="8" /></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td height="28" background="images/main_36.gif">
+					<div style="background-image: url(images/main_32.gif); width: 177px; height: 28px; text-align: center; color: White; font-size: 12px; line-height: 35px; float: left">
+						欢迎用户：<span style="border-bottom: 2px solid #333333;">[[${session.user.UserName}]]</span>
+					</div>
+					<div style="float: right; font-size: 12px; line-height: 35px; margin-right: 5px; margin-top: 3px;">
+						<form action="logout" method="get">
+							<input id="dengchu" type="submit" style="background-image: url(images/main_20.gif); border: solid 0px red; width: 49px; height: 18px;" value="" />
+						</form>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div data-options="region:'west',split:false" style="width: 160px">
+		<table cellpadding="0" cellspacing="0">
+			<tr>
+				<td id="td1"></td>
+				<td id="td2">
+					<div id="div1">管理菜单</div>
+					<div id="div2">
+						<!--菜单开始 -->
+						<!--父菜单 -->
+						<div class="menuDiv">营销管理</div>
+						<!--子菜单 -->
+						<div class="contentDiv" style="display: none">
+							<div>
+								<img src="images/left.gif" />
+								<span><a href="#" url="sale/chancePage">销售机会管理</a></span>
+							</div>
+							<div>
+								<img src="images/left.gif" />
+								<span><a href="#" url="sale/chancePage01">客户开发计划</a></span>
+							</div>
+						</div>
+						<!--菜单结束 -->
+						<!--父菜单 -->
+						<div class="menuDiv">客户管理</div>
+						<!--子菜单 -->
+						<div class="contentDiv" style="display: none">
+							<div>
+								<img src="images/left.gif" />
+								<span><a href="#" url="/MyCRM/cust/cstCustomPage">客户信息管理</a></span>
+							</div>
+							<div>
+								<img src="images/left.gif" />
+								<span><a href="#" url="/MyCRM/lost/cstLostPage">客户流失管理</a></span>
+							</div>
+						</div>
+						<!--父菜单 -->
+						<div class="menuDiv">服务管理</div>
+						<!--子菜单 -->
+						<div class="contentDiv" style="display: none">
+							<div>
+								<img src="images/left.gif" />
+								<span id="a"><a href="#" url="customerService/serviceCreate.html">服务创建</a></span>
+							</div>
+							<div>
+								<img src="images/left.gif" />
+								<span id="a"><a href="#" url="ser/servicePage?a=1">服务分配</a></span>
+							</div>
+							<div>
+								<img src="images/left.gif" />
+								<span id="a"><a href="#" url="ser/servicePage?a=2">服务处理</a></span>
+							</div>
+							<div>
+								<img src="images/left.gif" />
+								<span id="a"><a href="#" url="ser/servicePage?a=3">服务反馈</a></span>
+							</div>
+							<div>
+								<img src="images/left.gif" />
+								<span id="a"><a href="#" url="ser/servicePage?a=4">服务归档</a></span>
+							</div>
+						</div>
+						<!--父菜单 -->
+						<div class="menuDiv">统计报表</div>
+						<!--子菜单 -->
+						<div class="contentDiv" style="display: none">
+							<div>
+								<img src="images/left.gif" />
+								<span><a href="#" url="count/findCount">客户贡献分析</a></span>
+							</div>
+							<div>
+								<img src="images/left.gif" />
+								<span><a href="#" url="count/findCountNum">客户构成分析</a></span>
+							</div>
+							<div>
+								<img src="images/left.gif" />
+								<span><a href="#" url="count/findSvrCountNum">客户服务分析</a></span>
+							</div>
+							<div>
+								<img src="images/left.gif" />
+								<span><a href="#" url="count/findLost">客户流失分析</a></span>
+							</div>
+						</div>
+						<!--父菜单 -->
+						<div class="menuDiv">基础数据</div>
+						<!--子菜单 -->
+						<div class="contentDiv" style="display: none">
+							<div>
+								<img src="images/left.gif" /><span><a href="#"
+									url="dict/findDict">数据字典管理</a></span>
+							</div>
+							<div>
+								<img src="images/left.gif" /><span><a href="#"
+									url="prod/findProd">查询产品信息</a></span>
+							</div>
+							<div>
+								<img src="images/left.gif" /><span><a href="#"
+									url="sto/findSto">查询库存</a></span>
+							</div>
+						</div>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div data-options="region:'center'" style="width: 1000px; height: 1000px">
+		<iframe id="page" name="page" scrolling="auto" frameborder="0" src="default.html" style="width: 100%; height: 98.5%;"></iframe>
+	</div>
+</body>
+</html>

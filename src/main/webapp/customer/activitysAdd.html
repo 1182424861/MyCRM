@@ -1,0 +1,74 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title></title>
+    <link href="../css/style2.css" rel="stylesheet" type="text/css" />
+    <script src="../js/jquery-3.6.0.js" type="text/javascript" charset="utf-8"></script>
+    <script src='../js/dateTime.js'type='text/javascript'></script>
+</head>
+<body>
+    <table class="tableEdit">
+        <thead>
+            <tr>
+                <td colspan="4">新建客户来往记录</td>
+            </tr>
+        </thead>
+        <tr>
+            <th>交往时间：</th>
+            <td>
+            	<input type="text" name="atvCustNo" id="atvCustNo" style="display:none;" th:value="${cust.custNo}" />
+            	<input type="text" name="atvCustName" id="atvCustName" style="display:none;" th:value="${cust.custName}"/>
+                <input type="date" id="dateTime" name="atvDate" value=""/>
+            </td>
+            <th>交往地点：</th>
+            <td>
+                <input type="text" name="atvPlace" id="atvPlace"/>
+            </td>
+        </tr>
+        <tr>
+            <th>概要：</th>
+            <td><input type="text" name="atvTitle" id="atvTitle"/></td>
+            <th>备注：</th>
+            <td><input type="text" /></td>
+        </tr>
+        <tr>
+            <th>详细描述：</th>
+            <td colspan="3"><textarea name="atvDesc" id="atvDesc"></textarea></td>
+        </tr>
+        <tfoot>
+            <tr>
+                <td colspan="4">
+                    <input type="button" id="queding" value="确定" />&nbsp;&nbsp;
+                    <input type="button" value="关闭" onclick="location.href='findAtvByNo?custNo='+$('#atvCustNo').val()" />
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+    <script type="text/javascript">
+    	$("#queding").click(function(){
+    		$.ajax({
+	  	    	url:"addActivity",
+	  	    	tyle:"GET",
+	  	    	data:{
+	  	    			atvCustNo:$("#atvCustNo").val(),
+	  	    			atvCustName:$("#atvCustName").val(),
+	  	    			atvDate:$("#dateTime").val(),
+						atvPlace:$("#atvPlace").val(),
+	  	    		 	atvTitle:$("#atvTitle").val(),
+	  	    		 	atvDesc:$("#atvDesc").val()
+	  	    		 },
+		  		success:function(msg){
+		  			if(msg>0){ 
+	  	    			alert("添加来往记录成功！");
+	  	    			location.href="findAtvByNo?custNo="+$("#atvCustNo").val();
+	  	    		}else{
+	  	    			alert("添加来往记录失败！");
+	  	    			location.href="findCustANoName?atvCustNo="+$("#atvCustNo").val()+"$atvCustName="+$("#atvCustName").val();
+	  	    		}
+			    }
+			})	
+    	})
+    </script>
+</body>
+</html>

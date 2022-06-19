@@ -1,0 +1,80 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleay.org">
+<head>
+    <title></title>
+    <link href="../css/style1.css" rel="stylesheet" type="text/css" />
+    <link href="../css/style2.css" rel="stylesheet" type="text/css" />
+    <script src="../js/jquery-3.6.0.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+    <div id="desDiv">
+        <span>产品查询</span><br />
+        查询产品信息
+    </div>
+    <form action="findProdLike" method="post">
+    <table class="tableEdit">
+        <tr>
+            <th>产品名称：</th>
+            <td><input type="text" name="prodName"/></td>
+            <th>型号：</th>
+            <td><input type="text" name="prodType"/></td>
+            <th>批次：</th>
+            <td><input type="text" name="prodBatch"/></td>
+        </tr>
+        <tfoot>
+            <tr>
+                <td colspan="8"><input type="submit" value="查询" /></td>
+            </tr>
+        </tfoot>
+    </table>
+    </form>
+    <br />
+        <table class="dataTable">
+            <tr>
+                <th>产品名称</th>
+                <th>型号</th>
+                <th>等级/批次</th>
+                <th>单位</th>
+                <th>单价(元)</th>
+                <th>备注</th>
+            </tr>
+            <tr th:each="prod:${pageInfo.list}">
+                <td>[[${prod.prodName}]]</td>
+                <td>[[${prod.prodType}]]</td>
+                <td>[[${prod.prodBatch}]]</td>
+                <td>[[${prod.prodUnit}]]</td>
+                <td>[[${prod.prodPrice}]]</td>
+                <td>[[${prod.prodMemo}]]</td>
+            </tr>
+        </table>
+        <div id="pageDiv">
+            <div id="leftPage">共有[[${pageInfo.total}]]条记录，当前第[[${pageInfo.pageNum}]]/[[${pageInfo.pages}]]页</div>
+       		<div id="rightPage">
+          		<input type="image" src="../images/first.gif" onclick="First()" />&nbsp;&nbsp;
+           		<input type="image" src="../images/back.gif"  onclick="Pre()"/>&nbsp;&nbsp;
+           		<input type="image" src="../images/next.gif"  onclick="Next()"/>&nbsp;&nbsp;
+           		<input type="image" src="../images/last.gif"  onclick="Last()"/>&nbsp;&nbsp;
+           		转到第<input id="pageNow" type="text" size="1" />&nbsp;&nbsp;
+           		<input type="image" src="../images/go.gif" onclick="Page()"/>
+       		</div>
+       	</div>
+        <script type="text/javascript">
+    		function First(){
+    			location.href = "product?pageNow=1";
+    		}
+    		function Pre(){
+    			location.href = "product?pageNow="+[[${pageInfo.isFirstPage?1:pageInfo.PrePage}]];
+    		}
+    		function Next(){
+    			location.href = "product?pageNow="+[[${pageInfo.isLastPage?pageInfo.pages:pageInfo.NextPage}]];
+    		}
+    		function Last(){
+    			location.href = "product?pageNow="+[[${pageInfo.pages}]];
+    		}
+    		function Page(){
+    			location.href = "product?pageNow="+$("#pageNow").val();
+    		}
+    	</script>
+</body>
+</html>

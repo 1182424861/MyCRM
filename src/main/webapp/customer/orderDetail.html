@@ -1,0 +1,92 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title></title>
+    <link href="../css/style1.css" rel="stylesheet" type="text/css" />
+    <link href="../css/style2.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div id="desDiv">
+        <span>客户历史订单</span><br />
+        记录客户的历史订单
+    </div>
+    <table class="tableEdit">
+        <tr>
+            <th>
+                订单编号：
+            </th>
+            <td>
+                [[${ord.odrId}]]
+            </td>
+            <th>
+                日期：
+            </th>
+            <td>
+                [[${#dates.format(ord.odrDate,"yyyy年MM月dd日")}]]
+            </td>
+        </tr>
+        <tr>
+            <th>
+                送货地址：
+            </th>
+            <td>
+                [[${ord.odrAddr}]]
+            </td>
+            <th>
+                总金额(元)：
+            </th>
+            <td>
+                [[${total}]]
+            </td>
+        </tr>
+        <tr>
+            <th>
+                状态：
+            </th>
+            <td>
+                <span th:if="${ord.odrStatus} eq 1 ">已回款</span>
+                <span th:if="${ord.odrStatus} eq 2 ">未回款</span>
+            </td>
+            <th></th><td></td>
+        </tr>
+    </table>
+    <p></p>
+    <table class="dataTable">
+        <tr>
+            <th>
+                商品名
+            </th>
+            <th>
+                数量
+            </th>
+            <th>
+                单位
+            </th>
+            <th>
+                单价(元)
+            </th>
+            <th>
+                金额(元)
+            </th>
+        </tr>
+        <tr th:each="ordLine:${ordLine}">
+            <td>
+                [[${ordLine.Product.ProdName}]]
+            </td>
+            <td>
+                [[${ordLine.oddCount}]]
+            </td>
+            <td>
+                [[${ordLine.oddUnit}]]
+            </td>
+            <td>
+                [[${ordLine.oddPrice}]]
+            </td>
+            <td>
+               [[${(ordLine.oddCount)*(ordLine.oddPrice)}]]
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

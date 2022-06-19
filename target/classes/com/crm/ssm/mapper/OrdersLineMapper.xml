@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crm.ssm.mapper.OrdersLineMapper">
+	<!-- 自定义结果类型：ResultMap -->
+	<resultMap type="com.crm.ssm.entity.OrdersLine" id="odrl_prod_map">
+		<!-- 主表:一 -->
+		<!-- 主键：id，底层会有优化 -->
+		<id column="odd_id" property="oddId"/>
+		<!-- 普通列：如果字段名和属性名一致（驼峰），可以省略不写的 -->
+		<result column="odd_order_id" property="oddOrderId"/>
+		<result column="odd_prod_id" property="oddProdId"/>
+		<result column="odd_count" property="oddCount"/>
+		<result column="odd_unit" property="oddUnit"/>
+		<result column="odd_price" property="oddPrice"/>
+		<!-- 从表：对一 -->
+		<association column="prod_id" property="product" javaType="com.crm.ssm.entity.Product">
+			<id column="prod_id" property="prodId"/>
+			<result column="prod_name" property="prodName"/>
+		</association>
+	</resultMap>
+	
+	
+	<select id="findOdrLineAndProd" resultMap="odrl_prod_map">
+		SELECT *
+		FROM orders_line odrl
+		INNER JOIN  product pro on odrl.odd_prod_id=pro.prod_id
+		where odrl.odd_order_id = #{oddOrderId}
+	</select>	
+
+
+
+
+
+  <resultMap id="BaseResultMap" type="com.crm.ssm.entity.OrdersLine">
+    <id column="odd_id" jdbcType="INTEGER" property="oddId" />
+    <result column="odd_order_id" jdbcType="INTEGER" property="oddOrderId" />
+    <result column="odd_prod_id" jdbcType="INTEGER" property="oddProdId" />
+    <result column="odd_count" jdbcType="INTEGER" property="oddCount" />
+    <result column="odd_unit" jdbcType="VARCHAR" property="oddUnit" />
+    <result column="odd_price" jdbcType="DECIMAL" property="oddPrice" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    odd_id, odd_order_id, odd_prod_id, odd_count, odd_unit, odd_price
+  </sql>
+  <select id="selectByExample" parameterType="com.crm.ssm.entity.OrdersLineExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from orders_line
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from orders_line
+    where odd_id = #{oddId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from orders_line
+    where odd_id = #{oddId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.crm.ssm.entity.OrdersLineExample">
+    delete from orders_line
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.crm.ssm.entity.OrdersLine">
+    insert into orders_line (odd_id, odd_order_id, odd_prod_id, 
+      odd_count, odd_unit, odd_price
+      )
+    values (#{oddId,jdbcType=INTEGER}, #{oddOrderId,jdbcType=INTEGER}, #{oddProdId,jdbcType=INTEGER}, 
+      #{oddCount,jdbcType=INTEGER}, #{oddUnit,jdbcType=VARCHAR}, #{oddPrice,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.crm.ssm.entity.OrdersLine">
+    insert into orders_line
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="oddId != null">
+        odd_id,
+      </if>
+      <if test="oddOrderId != null">
+        odd_order_id,
+      </if>
+      <if test="oddProdId != null">
+        odd_prod_id,
+      </if>
+      <if test="oddCount != null">
+        odd_count,
+      </if>
+      <if test="oddUnit != null">
+        odd_unit,
+      </if>
+      <if test="oddPrice != null">
+        odd_price,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="oddId != null">
+        #{oddId,jdbcType=INTEGER},
+      </if>
+      <if test="oddOrderId != null">
+        #{oddOrderId,jdbcType=INTEGER},
+      </if>
+      <if test="oddProdId != null">
+        #{oddProdId,jdbcType=INTEGER},
+      </if>
+      <if test="oddCount != null">
+        #{oddCount,jdbcType=INTEGER},
+      </if>
+      <if test="oddUnit != null">
+        #{oddUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="oddPrice != null">
+        #{oddPrice,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.crm.ssm.entity.OrdersLineExample" resultType="java.lang.Long">
+    select count(*) from orders_line
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update orders_line
+    <set>
+      <if test="record.oddId != null">
+        odd_id = #{record.oddId,jdbcType=INTEGER},
+      </if>
+      <if test="record.oddOrderId != null">
+        odd_order_id = #{record.oddOrderId,jdbcType=INTEGER},
+      </if>
+      <if test="record.oddProdId != null">
+        odd_prod_id = #{record.oddProdId,jdbcType=INTEGER},
+      </if>
+      <if test="record.oddCount != null">
+        odd_count = #{record.oddCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.oddUnit != null">
+        odd_unit = #{record.oddUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="record.oddPrice != null">
+        odd_price = #{record.oddPrice,jdbcType=DECIMAL},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update orders_line
+    set odd_id = #{record.oddId,jdbcType=INTEGER},
+      odd_order_id = #{record.oddOrderId,jdbcType=INTEGER},
+      odd_prod_id = #{record.oddProdId,jdbcType=INTEGER},
+      odd_count = #{record.oddCount,jdbcType=INTEGER},
+      odd_unit = #{record.oddUnit,jdbcType=VARCHAR},
+      odd_price = #{record.oddPrice,jdbcType=DECIMAL}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.crm.ssm.entity.OrdersLine">
+    update orders_line
+    <set>
+      <if test="oddOrderId != null">
+        odd_order_id = #{oddOrderId,jdbcType=INTEGER},
+      </if>
+      <if test="oddProdId != null">
+        odd_prod_id = #{oddProdId,jdbcType=INTEGER},
+      </if>
+      <if test="oddCount != null">
+        odd_count = #{oddCount,jdbcType=INTEGER},
+      </if>
+      <if test="oddUnit != null">
+        odd_unit = #{oddUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="oddPrice != null">
+        odd_price = #{oddPrice,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where odd_id = #{oddId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.crm.ssm.entity.OrdersLine">
+    update orders_line
+    set odd_order_id = #{oddOrderId,jdbcType=INTEGER},
+      odd_prod_id = #{oddProdId,jdbcType=INTEGER},
+      odd_count = #{oddCount,jdbcType=INTEGER},
+      odd_unit = #{oddUnit,jdbcType=VARCHAR},
+      odd_price = #{oddPrice,jdbcType=DECIMAL}
+    where odd_id = #{oddId,jdbcType=INTEGER}
+  </update>
+</mapper>

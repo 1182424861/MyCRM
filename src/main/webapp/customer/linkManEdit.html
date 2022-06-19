@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title></title>
+    <link href="../css/style2.css" rel="stylesheet" type="text/css" />
+    <script src="../js/jquery-3.6.0.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+<table class="tableEdit">
+        <thead>
+            <tr>
+                <td colspan="4">编辑联系人</td>
+            </tr>
+        </thead>
+        <tr>
+            <th>姓名：</th>
+            <td>
+            	<input type="text" name="lkmId" id="lkmId" style="display:none;" th:value="${linkman.lkmId}"/>
+            	<input type="text" name="lkmCustNo" id="lkmCustNo" style="display:none;" th:value="${linkman.lkmCustNo}"/>
+                <input type="text" name="lkmName" id="lkmName" th:value="${linkman.lkmName}" />
+            </td>
+            <th>性别：</th>
+            <td>
+                <span th:if="${linkman.lkmSex} eq '男'"><input  type="radio" id="lkmSex" value="男" checked="checked" name="lkmSex" />男&nbsp;&nbsp;</span>
+				<span th:if="${linkman.lkmSex} eq '女'"><input  type="radio" id="lkmSex" value="女" checked="checked" name="lkmSex" />女&nbsp;&nbsp;</span>
+				<span th:if="${linkman.lkmSex} ne '男'"><input  type="radio" id="lkmSex" value="男" name="lkmSex" />男&nbsp;&nbsp;</span>
+				<span th:if="${linkman.lkmSex} ne '女'"><input  type="radio" id="lkmSex" value="女" name="lkmSex" />女&nbsp;&nbsp;</span>
+            </td>
+        </tr>
+        <tr>
+            <th>职位：</th>
+            <td><input type="text" name="lkmPostion" id="lkmPostion" th:value="${linkman.lkmPostion}"/></td>
+            <th>固定电话：</th>
+            <td><input type="text" name="lkmTel" id="lkmTel" th:value="${linkman.lkmTel}" /></td>
+        </tr>
+         <tr>
+            <th>手机号码：</th>
+            <td><input type="text" name="lkmMobile" id="lkmMobile" th:value="${linkman.lkmMobile}" /></td>
+            <th></th>
+            <td></td>
+        </tr>
+        <tr>
+            <th>备注：</th>
+            <td colspan="3"><textarea name="lkmMemo" id="lkmMemo">[[${linkman.lkmMemo}]]</textarea></td>
+        </tr>
+        <tfoot>
+            <tr>
+                <td colspan="4">
+                    <input type="button" id="queding" value="确定" />&nbsp;&nbsp;
+                    <input type="button" id="guanbi" value="关闭" onclick="location.href='findLkmByNo?custNo='+$('#lkmCustNo').val()"/>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+    <script type="text/javascript">
+    	$("#queding").click(function(){
+    		$.ajax({
+	  	    	url:"updateLkm",
+	  	    	tyle:"GET",
+	  	    	data:{
+	  	    			lkmId:$("#lkmId").val(),
+	  	    			lkmName:$("#lkmName").val(),
+						lkmSex:$("input[name='lkmSex']:checked").val(),
+	  	    		 	lkmPostion:$("#lkmPostion").val(),
+	  	    		 	lkmTel:$("#lkmTel").val(),
+	  	    		 	lkmMobile:$("#lkmMobile").val(),
+	  	    		 	lkmMemo:$("#lkmMemo").val()
+	  	    		 },
+		  		success:function(msg){
+		  			if(msg>0){ 
+	  	    			alert("编辑成功！");
+	  	    			location.href="findLkmByNo?custNo="+$('#lkmCustNo').val();
+	  	    		}else{
+	  	    			alert("编辑失败！");
+	  	    			location.href="findLkmById?lkmId="+$("#lkmId").val();
+	  	    		}
+			    }
+			})	
+    	})
+    </script>
+</body>
+</html>

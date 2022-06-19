@@ -1,0 +1,102 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title></title>
+    <link href="../css/style1.css" rel="stylesheet" type="text/css" />
+    <link href="../css/style2.css" rel="stylesheet" type="text/css" />
+    <script src="../js/jquery-3.6.0.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+    <div id="desDiv">
+        <span>客户历史订单</span><br />
+        记录客户的历史订单
+    </div>
+    <table class="tableEdit">
+        <tr>
+            <th>
+                客户编号：
+            </th>
+            <td>
+                <input type="text" style="width:90px; border:none;" readonly="readonly" name="custNo" id="custNo" th:value="${custNo}"/>
+            </td>
+            <th>
+                客户名称：
+            </th>
+            <td>
+            	<input type="text" style="width:90px; border:none;" readonly="readonly" name="custName" id="custName" th:value="${pageInfo.List.get(0).odrCustomer}"/>
+            </td>
+        </tr>
+    </table>
+    <div id="dataDiv">
+        <div id="headDiv">
+            <img src="../images/22.gif" />&nbsp;&nbsp;<a href="activitysAdd.html">新建</a>
+        </div>
+        <table class="dataTable">
+            <tr>
+                <th>
+                    订单编号
+                </th>
+                <th>
+                    日期
+                </th>
+                <th>
+                    送货地址
+                </th>
+                <th>
+                    状态
+                </th>
+                <th>
+                    操作
+                </th>
+            </tr>
+            <tr th:each="order:${pageInfo.list}">
+                <td>
+                    [[${order.odrId}]]
+                </td>
+                <td>
+                    [[${#dates.format(order.odrDate,"yyyy年MM月dd日")}]]
+                </td>
+                <td>
+                    [[${order.odrAddr}]]
+                </td>
+                <td>
+                	<span th:if="${order.odrStatus} eq 1 ">已回款</span>
+                    <span th:if="${order.odrStatus} eq 2 ">未回款</span>
+                </td>
+                <td>
+                    <a th:href="'/MyCRM/ord/findOrdLineByOdrId?odrId='+${order.odrId}"><img title="详细信息" src="../images/bt_detail.gif" /></a>
+                </td>
+            </tr>
+        </table>
+        <div id="pageDiv">
+            <div id="leftPage">共有[[${pageInfo.total}]]条记录，当前第[[${pageInfo.pageNum}]]/[[${pageInfo.pages}]]页</div>
+            <div id="rightPage">
+                <input type="image" src="../images/first.gif" onclick="First()" />&nbsp;&nbsp;
+           		<input type="image" src="../images/back.gif"  onclick="Pre()"/>&nbsp;&nbsp;
+           		<input type="image" src="../images/next.gif"  onclick="Next()"/>&nbsp;&nbsp;
+           		<input type="image" src="../images/last.gif"  onclick="Last()"/>&nbsp;&nbsp;
+           		转到第<input id="pageNow" type="text" size="1" />&nbsp;&nbsp;
+           		<input type="image" src="../images/go.gif" onclick="Page()" />   
+            </div>
+            <script type="text/javascript">
+		        function First(){
+		   			location.href = "findOrdByName?pageNow=1&custNo="+$("#custNo").val()+"&custName="+$("#custName").val();
+		   		}
+		   		function Pre(){
+		   			location.href = "findOrdByName?pageNow="+[[${pageInfo.isFirstPage?1:pageInfo.PrePage}]]+"&custNo="+$("#custNo").val()+"&custName="+$("#custName").val();
+		   		}
+		   		function Next(){
+		   			location.href = "findOrdByName?pageNow="+[[${pageInfo.isLastPage?pageInfo.pages:pageInfo.NextPage}]]+"&custNo="+$("#custNo").val()+"&custName="+$("#custName").val();
+		   		}
+		   		function Last(){
+		   			location.href = "findOrdByName?pageNow="+[[${pageInfo.pages}]]+"&custNo="+$("#custNo").val()+"&custName="+$("#custName").val();
+		   		}
+		   		function Page(){
+	    			location.href = "findOrdByName?pageNow="+$("#pageNow").val();
+	    		}
+    		</script>
+        </div>
+    </div>
+</body>
+</html>

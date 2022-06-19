@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crm.ssm.mapper.SysMenuMapper">
+  <resultMap id="BaseResultMap" type="com.crm.ssm.entity.SysMenu">
+    <id column="right_id" jdbcType="INTEGER" property="rightId" />
+    <result column="right_parent_id" jdbcType="VARCHAR" property="rightParentId" />
+    <result column="right_type" jdbcType="TINYINT" property="rightType" />
+    <result column="right_text" jdbcType="VARCHAR" property="rightText" />
+    <result column="right_url" jdbcType="VARCHAR" property="rightUrl" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    right_id, right_parent_id, right_type, right_text, right_url
+  </sql>
+  <select id="selectByExample" parameterType="com.crm.ssm.entity.SysMenuExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from sys_menu
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_menu
+    where right_id = #{rightId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sys_menu
+    where right_id = #{rightId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.crm.ssm.entity.SysMenuExample">
+    delete from sys_menu
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.crm.ssm.entity.SysMenu">
+    insert into sys_menu (right_id, right_parent_id, right_type, 
+      right_text, right_url)
+    values (#{rightId,jdbcType=INTEGER}, #{rightParentId,jdbcType=VARCHAR}, #{rightType,jdbcType=TINYINT}, 
+      #{rightText,jdbcType=VARCHAR}, #{rightUrl,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.crm.ssm.entity.SysMenu">
+    insert into sys_menu
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="rightId != null">
+        right_id,
+      </if>
+      <if test="rightParentId != null">
+        right_parent_id,
+      </if>
+      <if test="rightType != null">
+        right_type,
+      </if>
+      <if test="rightText != null">
+        right_text,
+      </if>
+      <if test="rightUrl != null">
+        right_url,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="rightId != null">
+        #{rightId,jdbcType=INTEGER},
+      </if>
+      <if test="rightParentId != null">
+        #{rightParentId,jdbcType=VARCHAR},
+      </if>
+      <if test="rightType != null">
+        #{rightType,jdbcType=TINYINT},
+      </if>
+      <if test="rightText != null">
+        #{rightText,jdbcType=VARCHAR},
+      </if>
+      <if test="rightUrl != null">
+        #{rightUrl,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.crm.ssm.entity.SysMenuExample" resultType="java.lang.Long">
+    select count(*) from sys_menu
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update sys_menu
+    <set>
+      <if test="record.rightId != null">
+        right_id = #{record.rightId,jdbcType=INTEGER},
+      </if>
+      <if test="record.rightParentId != null">
+        right_parent_id = #{record.rightParentId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.rightType != null">
+        right_type = #{record.rightType,jdbcType=TINYINT},
+      </if>
+      <if test="record.rightText != null">
+        right_text = #{record.rightText,jdbcType=VARCHAR},
+      </if>
+      <if test="record.rightUrl != null">
+        right_url = #{record.rightUrl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update sys_menu
+    set right_id = #{record.rightId,jdbcType=INTEGER},
+      right_parent_id = #{record.rightParentId,jdbcType=VARCHAR},
+      right_type = #{record.rightType,jdbcType=TINYINT},
+      right_text = #{record.rightText,jdbcType=VARCHAR},
+      right_url = #{record.rightUrl,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.crm.ssm.entity.SysMenu">
+    update sys_menu
+    <set>
+      <if test="rightParentId != null">
+        right_parent_id = #{rightParentId,jdbcType=VARCHAR},
+      </if>
+      <if test="rightType != null">
+        right_type = #{rightType,jdbcType=TINYINT},
+      </if>
+      <if test="rightText != null">
+        right_text = #{rightText,jdbcType=VARCHAR},
+      </if>
+      <if test="rightUrl != null">
+        right_url = #{rightUrl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where right_id = #{rightId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.crm.ssm.entity.SysMenu">
+    update sys_menu
+    set right_parent_id = #{rightParentId,jdbcType=VARCHAR},
+      right_type = #{rightType,jdbcType=TINYINT},
+      right_text = #{rightText,jdbcType=VARCHAR},
+      right_url = #{rightUrl,jdbcType=VARCHAR}
+    where right_id = #{rightId,jdbcType=INTEGER}
+  </update>
+</mapper>

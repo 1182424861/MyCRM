@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <title></title>
+    <link href="../css/style2.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+	<form action="updateSalChance" method="post">
+    <table class="tableEdit">
+        <thead>
+            <tr>
+                <td colspan="4">销售机会编辑</td>
+            </tr>
+        </thead>
+        <tr>
+            <th>客户名称：</th>
+            <td>
+            	<input type="text" style="display:none;" name="chcId" id="chcId" th:value="${salChance.chcId}"/>
+                <input type="text" style="width:90px;" name="chcCustName" id="chcCustName" th:value="${salChance.chcCustName}"/>
+            </td>
+            <th>机会来源</th>
+            <td><input type="text" style="width:180px;" name="chcSource" id="chcSource" th:value="${salChance.chcSource}" /></td>
+        </tr>
+        <tr>
+            <th>成功几率：</th>
+            <td>
+            	 百分之
+                <input type="text" style="width:50px;" name="chcRate" id="chcRate" th:value="${salChance.chcRate}" />
+            </td>
+            <th></th>
+            <td></td>
+        </tr>
+        <tr>
+            <th>联系人：</th>
+            <td>
+            	<input type="text" style="width:90px;" name="chcLinkman" id="" th:value="${salChance.chcLinkman}" />
+            </td>
+            <th>联系电话：</th>
+            <td>
+            	<input type="text" style="width:180px;" name="chcTel" id="chcTel" th:value="${salChance.chcTel}" />
+            </td>
+        </tr>
+        <tr>
+            <th>概要：</th>
+            <td colspan="3">
+            	<input type="text" style="width:305px;" name="chcTitle" id="chcTitle" th:value="${salChance.chcTitle}" />
+            </td>
+        </tr>
+        <tr>
+            <th>机会描述：</th>
+            <td colspan="3">
+            	<textarea style="width:500px" name="chcDesc" >[[${salChance.chcDesc}]]</textarea>
+            </td>
+        </tr>
+        <tr>
+            <th>创建人</th>
+            <td><input type="text" readonly="readonly" style="border:none;" th:value="${session.user.UserName}" /></td>
+            <th>创建时间</th>
+            <td><input type="text" readonly="readonly" style="border:none;" name="chcCreateDate" th:value="${#dates.format(salChance.chcCreateDate,'yyyy年MM月dd日')}"/></td>
+        </tr>
+        <tfoot>
+            <tr>
+                <td colspan="4">
+                    <input type="submit" id="anniu" value="确定" style="margin:auto 360px;" />&nbsp;&nbsp;
+                    <input type="button" id="anniu" value="返回" onclick="location.href='chancePage'"/>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+    </form>
+</body>
+</html>

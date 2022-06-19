@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crm.ssm.mapper.CstLostMapper">
+  <resultMap id="BaseResultMap" type="com.crm.ssm.entity.CstLost">
+    <id column="lst_id" jdbcType="INTEGER" property="lstId" />
+    <result column="lst_cust_no" jdbcType="VARCHAR" property="lstCustNo" />
+    <result column="lst_cust_name" jdbcType="VARCHAR" property="lstCustName" />
+    <result column="lst_cust_manager_id" jdbcType="INTEGER" property="lstCustManagerId" />
+    <result column="lst_cust_manager_name" jdbcType="VARCHAR" property="lstCustManagerName" />
+    <result column="lst_last_order_date" jdbcType="TIMESTAMP" property="lstLastOrderDate" />
+    <result column="lst_lost_date" jdbcType="TIMESTAMP" property="lstLostDate" />
+    <result column="lst_delay" jdbcType="VARCHAR" property="lstDelay" />
+    <result column="lst_reason" jdbcType="VARCHAR" property="lstReason" />
+    <result column="lst_status" jdbcType="VARCHAR" property="lstStatus" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    lst_id, lst_cust_no, lst_cust_name, lst_cust_manager_id, lst_cust_manager_name, lst_last_order_date, 
+    lst_lost_date, lst_delay, lst_reason, lst_status
+  </sql>
+  <select id="selectByExample" parameterType="com.crm.ssm.entity.CstLostExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from cst_lost
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from cst_lost
+    where lst_id = #{lstId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from cst_lost
+    where lst_id = #{lstId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.crm.ssm.entity.CstLostExample">
+    delete from cst_lost
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.crm.ssm.entity.CstLost">
+    insert into cst_lost (lst_id, lst_cust_no, lst_cust_name, 
+      lst_cust_manager_id, lst_cust_manager_name, lst_last_order_date, 
+      lst_lost_date, lst_delay, lst_reason, 
+      lst_status)
+    values (#{lstId,jdbcType=INTEGER}, #{lstCustNo,jdbcType=VARCHAR}, #{lstCustName,jdbcType=VARCHAR}, 
+      #{lstCustManagerId,jdbcType=INTEGER}, #{lstCustManagerName,jdbcType=VARCHAR}, #{lstLastOrderDate,jdbcType=TIMESTAMP}, 
+      #{lstLostDate,jdbcType=TIMESTAMP}, #{lstDelay,jdbcType=VARCHAR}, #{lstReason,jdbcType=VARCHAR}, 
+      #{lstStatus,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.crm.ssm.entity.CstLost">
+    insert into cst_lost
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="lstId != null">
+        lst_id,
+      </if>
+      <if test="lstCustNo != null">
+        lst_cust_no,
+      </if>
+      <if test="lstCustName != null">
+        lst_cust_name,
+      </if>
+      <if test="lstCustManagerId != null">
+        lst_cust_manager_id,
+      </if>
+      <if test="lstCustManagerName != null">
+        lst_cust_manager_name,
+      </if>
+      <if test="lstLastOrderDate != null">
+        lst_last_order_date,
+      </if>
+      <if test="lstLostDate != null">
+        lst_lost_date,
+      </if>
+      <if test="lstDelay != null">
+        lst_delay,
+      </if>
+      <if test="lstReason != null">
+        lst_reason,
+      </if>
+      <if test="lstStatus != null">
+        lst_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="lstId != null">
+        #{lstId,jdbcType=INTEGER},
+      </if>
+      <if test="lstCustNo != null">
+        #{lstCustNo,jdbcType=VARCHAR},
+      </if>
+      <if test="lstCustName != null">
+        #{lstCustName,jdbcType=VARCHAR},
+      </if>
+      <if test="lstCustManagerId != null">
+        #{lstCustManagerId,jdbcType=INTEGER},
+      </if>
+      <if test="lstCustManagerName != null">
+        #{lstCustManagerName,jdbcType=VARCHAR},
+      </if>
+      <if test="lstLastOrderDate != null">
+        #{lstLastOrderDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lstLostDate != null">
+        #{lstLostDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lstDelay != null">
+        #{lstDelay,jdbcType=VARCHAR},
+      </if>
+      <if test="lstReason != null">
+        #{lstReason,jdbcType=VARCHAR},
+      </if>
+      <if test="lstStatus != null">
+        #{lstStatus,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.crm.ssm.entity.CstLostExample" resultType="java.lang.Long">
+    select count(*) from cst_lost
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update cst_lost
+    <set>
+      <if test="record.lstId != null">
+        lst_id = #{record.lstId,jdbcType=INTEGER},
+      </if>
+      <if test="record.lstCustNo != null">
+        lst_cust_no = #{record.lstCustNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lstCustName != null">
+        lst_cust_name = #{record.lstCustName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lstCustManagerId != null">
+        lst_cust_manager_id = #{record.lstCustManagerId,jdbcType=INTEGER},
+      </if>
+      <if test="record.lstCustManagerName != null">
+        lst_cust_manager_name = #{record.lstCustManagerName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lstLastOrderDate != null">
+        lst_last_order_date = #{record.lstLastOrderDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.lstLostDate != null">
+        lst_lost_date = #{record.lstLostDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.lstDelay != null">
+        lst_delay = #{record.lstDelay,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lstReason != null">
+        lst_reason = #{record.lstReason,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lstStatus != null">
+        lst_status = #{record.lstStatus,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update cst_lost
+    set lst_id = #{record.lstId,jdbcType=INTEGER},
+      lst_cust_no = #{record.lstCustNo,jdbcType=VARCHAR},
+      lst_cust_name = #{record.lstCustName,jdbcType=VARCHAR},
+      lst_cust_manager_id = #{record.lstCustManagerId,jdbcType=INTEGER},
+      lst_cust_manager_name = #{record.lstCustManagerName,jdbcType=VARCHAR},
+      lst_last_order_date = #{record.lstLastOrderDate,jdbcType=TIMESTAMP},
+      lst_lost_date = #{record.lstLostDate,jdbcType=TIMESTAMP},
+      lst_delay = #{record.lstDelay,jdbcType=VARCHAR},
+      lst_reason = #{record.lstReason,jdbcType=VARCHAR},
+      lst_status = #{record.lstStatus,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.crm.ssm.entity.CstLost">
+    update cst_lost
+    <set>
+      <if test="lstCustNo != null">
+        lst_cust_no = #{lstCustNo,jdbcType=VARCHAR},
+      </if>
+      <if test="lstCustName != null">
+        lst_cust_name = #{lstCustName,jdbcType=VARCHAR},
+      </if>
+      <if test="lstCustManagerId != null">
+        lst_cust_manager_id = #{lstCustManagerId,jdbcType=INTEGER},
+      </if>
+      <if test="lstCustManagerName != null">
+        lst_cust_manager_name = #{lstCustManagerName,jdbcType=VARCHAR},
+      </if>
+      <if test="lstLastOrderDate != null">
+        lst_last_order_date = #{lstLastOrderDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lstLostDate != null">
+        lst_lost_date = #{lstLostDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lstDelay != null">
+        lst_delay = #{lstDelay,jdbcType=VARCHAR},
+      </if>
+      <if test="lstReason != null">
+        lst_reason = #{lstReason,jdbcType=VARCHAR},
+      </if>
+      <if test="lstStatus != null">
+        lst_status = #{lstStatus,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where lst_id = #{lstId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.crm.ssm.entity.CstLost">
+    update cst_lost
+    set lst_cust_no = #{lstCustNo,jdbcType=VARCHAR},
+      lst_cust_name = #{lstCustName,jdbcType=VARCHAR},
+      lst_cust_manager_id = #{lstCustManagerId,jdbcType=INTEGER},
+      lst_cust_manager_name = #{lstCustManagerName,jdbcType=VARCHAR},
+      lst_last_order_date = #{lstLastOrderDate,jdbcType=TIMESTAMP},
+      lst_lost_date = #{lstLostDate,jdbcType=TIMESTAMP},
+      lst_delay = #{lstDelay,jdbcType=VARCHAR},
+      lst_reason = #{lstReason,jdbcType=VARCHAR},
+      lst_status = #{lstStatus,jdbcType=VARCHAR}
+    where lst_id = #{lstId,jdbcType=INTEGER}
+  </update>
+</mapper>

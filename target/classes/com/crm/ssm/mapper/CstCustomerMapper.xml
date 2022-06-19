@@ -1,0 +1,644 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crm.ssm.mapper.CstCustomerMapper">
+	
+	<!-- 【四表联查，自动生成序列号，按名称分组求数量*单价的总和，得到创建时间，条件查询，模糊查询】 -->
+	<!-- 自定义结果类型：ResultMap -->
+	<resultMap type="com.crm.ssm.entity.CstCustomer" id="cst_odr_odd_map">
+		<!-- 主表:一 -->
+		<!-- 主键：id，底层会有优化 -->
+		<id column="cust_no" property="custNo"/>
+		<!-- 普通列：如果字段名和属性名一致（驼峰），可以省略不写的 -->
+		<result column="cust_name" property="custName"/>
+		<result column="i" property="i"/><!-- 序列号 -->
+		<result column="total" property="total"/><!-- 总额 -->
+		<!-- 从表：对多 -->
+		<association column="odr_id" property="Orders" javaType="com.crm.ssm.entity.Orders">
+			<id column="odr_id" property="odrId"/>
+			<result column="odr_customer" property="odrCustomer"/>
+		</association>
+		<association column="odd_id" property="ordersLine" javaType="com.crm.ssm.entity.OrdersLine">
+			<id column="odd_id" property="odrId"/>
+			<result column="odd_order_id" property="oddOrderId"/>
+			<result column="odd_count" property="oddCount"/>
+			<result column="odd_price" property="oddPrice"/>
+		</association>
+		<association column="svr_id" property="cstService" javaType="com.crm.ssm.entity.CstService">
+			<id column="svr_id" property="svrId"/>
+			<result column="svr_cust_no" property="svrCustNo"/>
+			<result column="svr_create_date" property="svrCreateDate"/>
+		</association>
+	</resultMap>
+	<select id="findCount" resultMap="cst_odr_odd_map">
+		SELECT (@i:=@i+1) i,cstc.cust_name,sum(odd.odd_count*odd.odd_price) total,svr.svr_create_date
+		FROM cst_customer as cstc
+		LEFT JOIN (select @i:=0) as i
+		ON 1=1
+		LEFT JOIN orders as odre
+		ON cstc.cust_name = odre.odr_customer
+		LEFT JOIN orders_line as odd
+		ON odre.odr_id = odd.odd_order_id
+		LEFT JOIN cst_service svr 
+		ON cstc.cust_no=svr.svr_cust_no
+		WHERE 1=1
+		<if test="custName!=null">
+			and cust_name like CONCAT('%',#{custName},'%')
+		</if>
+		<if test="svrCreateDate!=null">
+			and (select year(svr.svr_create_date)) = #{svrCreateDate}
+		</if>
+		GROUP BY cstc.cust_name
+		ORDER BY i ASC
+	</select>
+	
+	<!-- 按客户等级或者信用度或者满意度统计客户数量【level=1表示按客户等级，level=2表示按客户信用度，level=3表示按客户满意度】 -->
+	<resultMap type="com.crm.ssm.entity.CstCustomer" id="cst_countNum_map">
+		<!-- 主表:一 -->
+		<!-- 主键：id，底层会有优化 -->
+		<id column="cust_no" property="custNo"/>
+		<!-- 普通列：如果字段名和属性名一致（驼峰），可以省略不写的 -->
+		<result column="cust_name" property="custName"/>
+		<result column="i" property="i"/><!-- 序列号 -->
+		<result column="cust_level" property="custLevel"/><!-- 等级 -->
+		<result column="cust_credit" property="custCredit"/><!-- 信用度 -->
+		<result column="cust_satisfy" property="custSatisfy"/><!-- 满意度 -->
+		<result column="grade" property="grade"/><!-- 等级 -->
+		<result column="count" property="count"/><!-- 数量 -->
+	</resultMap>
+	<select id="findCountNum" resultMap="cst_countNum_map">
+		SELECT (@i:=@i+1) i,
+		<if test="level==1">
+			cstc.cust_level
+		</if>
+		<if test="level==2">
+			cstc.cust_credit
+		</if>
+		<if test="level==3">
+			cstc.cust_satisfy
+		</if>
+		as grade,
+		COUNT(cstc.cust_no) as count
+		FROM cst_customer as cstc
+		LEFT JOIN (select @i:=0) as i
+		ON 1=1
+		<if test="level==1">
+			GROUP BY cstc.cust_level
+		</if>
+		<if test="level==2">
+			GROUP BY cstc.cust_credit
+		</if>
+		<if test="level==3">
+			GROUP BY cstc.cust_satisfy
+		</if>
+		ORDER BY i ASC
+	</select>
+	
+	
+	<!-- 自定义结果类型：ResultMap -->
+	<resultMap type="com.crm.ssm.entity.CstCustomer" id="cst_svr_map">
+		<!-- 主表:一 -->
+		<!-- 主键：id，底层会有优化 -->
+		<id column="cust_no" property="custNo"/>
+		<!-- 普通列：如果字段名和属性名一致（驼峰），可以省略不写的 -->
+		<result column="cust_no" property="custNo"/>
+		<result column="cust_name" property="custName"/>
+		<result column="cust_region" property="custRegion"/>
+		<result column="cust_manager_id" property="custManagerId"/>
+		<result column="cust_manager_name" property="custManagerName"/>
+		<result column="cust_level" property="custLevel"/>
+		<result column="cust_satisfy" property="custSatisfy"/>
+		<result column="cust_credit" property="custCredit"/>
+		<result column="cust_addr" property="custAddr"/>
+		<result column="cust_zip" property="custZip"/>
+		<result column="cust_tel" property="custTel"/>
+		<result column="cust_fax" property="custFax"/>
+		<result column="cust_website" property="custWebsite"/>
+		<result column="cust_licence_no" property="custLicenceNo"/>
+		<result column="cust_chieftain" property="custChieftain"/>
+		<result column="cust_bankroll" property="custBankroll"/>
+		<result column="cust_turnover" property="custTurnover"/>
+		<result column="cust_bank" property="custBank"/>
+		<result column="cust_bank_account" property="custBankAccount"/>
+		<result column="cust_local_tax_no" property="custLocalTaxNo"/>
+		<result column="cust_national_tax_no" property="custNationalTaxNo"/>
+		<result column="cust_status" property="custStatus"/>
+		<!-- 从表：对一 -->
+		<association column="svr_id" property="cstService" javaType="com.crm.ssm.entity.CstService">
+			<id column="svr_id" property="svrId"/>
+			<result column="svr_cust_no" property="svrCustNo"/>
+			<result column="svr_create_date" property="svrCreateDate"/>
+		</association>
+	</resultMap>
+	<!-- 【两表联查，得到客户信息和创建时间】 -->
+	<select id="findCstSvrAll" resultMap="cst_svr_map">
+		SELECT cst.*,svr.svr_create_date
+		FROM cst_customer cst
+		INNER JOIN  cst_service svr on cst.cust_no=svr.svr_cust_no
+		GROUP BY cst.cust_name
+	</select>
+	<!-- 【模糊查询+条件查询+两表联查】 -->
+	<select id="findCstSvrLike" resultMap="cst_svr_map">
+		SELECT *
+		FROM cst_customer cst
+		INNER JOIN  cst_service svr on cst.cust_no=svr.svr_cust_no
+		WHERE 1=1
+		<if test="custName!=null ">
+			and cust_name like CONCAT('%',#{custName},'%')
+		</if>
+		<if test="custNo!=null ">
+			and cust_no like CONCAT('%',#{custNo},'%')
+		</if>
+		<if test="custManagerName != null ">
+			and cust_manager_name like CONCAT('%',#{custManagerName},'%')
+		</if>
+		<if test="custRegion!='' ">
+			and cust_region = #{custRegion}
+		</if>
+		<if test="custLevel != null ">
+			and cust_level = #{custLevel}
+		</if>
+		GROUP BY cst.cust_name
+	</select>
+	
+	
+	
+	
+
+  <resultMap id="BaseResultMap" type="com.crm.ssm.entity.CstCustomer">
+    <id column="cust_no" jdbcType="VARCHAR" property="custNo" />
+    <result column="cust_name" jdbcType="VARCHAR" property="custName" />
+    <result column="cust_region" jdbcType="VARCHAR" property="custRegion" />
+    <result column="cust_manager_id" jdbcType="INTEGER" property="custManagerId" />
+    <result column="cust_manager_name" jdbcType="VARCHAR" property="custManagerName" />
+    <result column="cust_level" jdbcType="INTEGER" property="custLevel" />
+    <result column="cust_satisfy" jdbcType="INTEGER" property="custSatisfy" />
+    <result column="cust_credit" jdbcType="INTEGER" property="custCredit" />
+    <result column="cust_addr" jdbcType="VARCHAR" property="custAddr" />
+    <result column="cust_zip" jdbcType="VARCHAR" property="custZip" />
+    <result column="cust_tel" jdbcType="VARCHAR" property="custTel" />
+    <result column="cust_fax" jdbcType="VARCHAR" property="custFax" />
+    <result column="cust_website" jdbcType="VARCHAR" property="custWebsite" />
+    <result column="cust_licence_no" jdbcType="VARCHAR" property="custLicenceNo" />
+    <result column="cust_chieftain" jdbcType="VARCHAR" property="custChieftain" />
+    <result column="cust_bankroll" jdbcType="INTEGER" property="custBankroll" />
+    <result column="cust_turnover" jdbcType="INTEGER" property="custTurnover" />
+    <result column="cust_bank" jdbcType="VARCHAR" property="custBank" />
+    <result column="cust_bank_account" jdbcType="VARCHAR" property="custBankAccount" />
+    <result column="cust_local_tax_no" jdbcType="VARCHAR" property="custLocalTaxNo" />
+    <result column="cust_national_tax_no" jdbcType="VARCHAR" property="custNationalTaxNo" />
+    <result column="cust_status" jdbcType="VARCHAR" property="custStatus" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    cust_no, cust_name, cust_region, cust_manager_id, cust_manager_name, cust_level, 
+    cust_satisfy, cust_credit, cust_addr, cust_zip, cust_tel, cust_fax, cust_website, 
+    cust_licence_no, cust_chieftain, cust_bankroll, cust_turnover, cust_bank, cust_bank_account, 
+    cust_local_tax_no, cust_national_tax_no, cust_status
+  </sql>
+  <select id="selectByExample" parameterType="com.crm.ssm.entity.CstCustomerExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from cst_customer
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from cst_customer
+    where cust_no = #{custNo,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from cst_customer
+    where cust_no = #{custNo,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.crm.ssm.entity.CstCustomerExample">
+    delete from cst_customer
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.crm.ssm.entity.CstCustomer">
+    insert into cst_customer (cust_no, cust_name, cust_region, 
+      cust_manager_id, cust_manager_name, cust_level, 
+      cust_satisfy, cust_credit, cust_addr, 
+      cust_zip, cust_tel, cust_fax, 
+      cust_website, cust_licence_no, cust_chieftain, 
+      cust_bankroll, cust_turnover, cust_bank, 
+      cust_bank_account, cust_local_tax_no, cust_national_tax_no, 
+      cust_status)
+    values (#{custNo,jdbcType=VARCHAR}, #{custName,jdbcType=VARCHAR}, #{custRegion,jdbcType=VARCHAR}, 
+      #{custManagerId,jdbcType=INTEGER}, #{custManagerName,jdbcType=VARCHAR}, #{custLevel,jdbcType=INTEGER}, 
+      #{custSatisfy,jdbcType=INTEGER}, #{custCredit,jdbcType=INTEGER}, #{custAddr,jdbcType=VARCHAR}, 
+      #{custZip,jdbcType=VARCHAR}, #{custTel,jdbcType=VARCHAR}, #{custFax,jdbcType=VARCHAR}, 
+      #{custWebsite,jdbcType=VARCHAR}, #{custLicenceNo,jdbcType=VARCHAR}, #{custChieftain,jdbcType=VARCHAR}, 
+      #{custBankroll,jdbcType=INTEGER}, #{custTurnover,jdbcType=INTEGER}, #{custBank,jdbcType=VARCHAR}, 
+      #{custBankAccount,jdbcType=VARCHAR}, #{custLocalTaxNo,jdbcType=VARCHAR}, #{custNationalTaxNo,jdbcType=VARCHAR}, 
+      #{custStatus,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.crm.ssm.entity.CstCustomer">
+    insert into cst_customer
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="custNo != null">
+        cust_no,
+      </if>
+      <if test="custName != null">
+        cust_name,
+      </if>
+      <if test="custRegion != null">
+        cust_region,
+      </if>
+      <if test="custManagerId != null">
+        cust_manager_id,
+      </if>
+      <if test="custManagerName != null">
+        cust_manager_name,
+      </if>
+      <if test="custLevel != null">
+        cust_level,
+      </if>
+      <if test="custSatisfy != null">
+        cust_satisfy,
+      </if>
+      <if test="custCredit != null">
+        cust_credit,
+      </if>
+      <if test="custAddr != null">
+        cust_addr,
+      </if>
+      <if test="custZip != null">
+        cust_zip,
+      </if>
+      <if test="custTel != null">
+        cust_tel,
+      </if>
+      <if test="custFax != null">
+        cust_fax,
+      </if>
+      <if test="custWebsite != null">
+        cust_website,
+      </if>
+      <if test="custLicenceNo != null">
+        cust_licence_no,
+      </if>
+      <if test="custChieftain != null">
+        cust_chieftain,
+      </if>
+      <if test="custBankroll != null">
+        cust_bankroll,
+      </if>
+      <if test="custTurnover != null">
+        cust_turnover,
+      </if>
+      <if test="custBank != null">
+        cust_bank,
+      </if>
+      <if test="custBankAccount != null">
+        cust_bank_account,
+      </if>
+      <if test="custLocalTaxNo != null">
+        cust_local_tax_no,
+      </if>
+      <if test="custNationalTaxNo != null">
+        cust_national_tax_no,
+      </if>
+      <if test="custStatus != null">
+        cust_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="custNo != null">
+        #{custNo,jdbcType=VARCHAR},
+      </if>
+      <if test="custName != null">
+        #{custName,jdbcType=VARCHAR},
+      </if>
+      <if test="custRegion != null">
+        #{custRegion,jdbcType=VARCHAR},
+      </if>
+      <if test="custManagerId != null">
+        #{custManagerId,jdbcType=INTEGER},
+      </if>
+      <if test="custManagerName != null">
+        #{custManagerName,jdbcType=VARCHAR},
+      </if>
+      <if test="custLevel != null">
+        #{custLevel,jdbcType=INTEGER},
+      </if>
+      <if test="custSatisfy != null">
+        #{custSatisfy,jdbcType=INTEGER},
+      </if>
+      <if test="custCredit != null">
+        #{custCredit,jdbcType=INTEGER},
+      </if>
+      <if test="custAddr != null">
+        #{custAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="custZip != null">
+        #{custZip,jdbcType=VARCHAR},
+      </if>
+      <if test="custTel != null">
+        #{custTel,jdbcType=VARCHAR},
+      </if>
+      <if test="custFax != null">
+        #{custFax,jdbcType=VARCHAR},
+      </if>
+      <if test="custWebsite != null">
+        #{custWebsite,jdbcType=VARCHAR},
+      </if>
+      <if test="custLicenceNo != null">
+        #{custLicenceNo,jdbcType=VARCHAR},
+      </if>
+      <if test="custChieftain != null">
+        #{custChieftain,jdbcType=VARCHAR},
+      </if>
+      <if test="custBankroll != null">
+        #{custBankroll,jdbcType=INTEGER},
+      </if>
+      <if test="custTurnover != null">
+        #{custTurnover,jdbcType=INTEGER},
+      </if>
+      <if test="custBank != null">
+        #{custBank,jdbcType=VARCHAR},
+      </if>
+      <if test="custBankAccount != null">
+        #{custBankAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="custLocalTaxNo != null">
+        #{custLocalTaxNo,jdbcType=VARCHAR},
+      </if>
+      <if test="custNationalTaxNo != null">
+        #{custNationalTaxNo,jdbcType=VARCHAR},
+      </if>
+      <if test="custStatus != null">
+        #{custStatus,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.crm.ssm.entity.CstCustomerExample" resultType="java.lang.Long">
+    select count(*) from cst_customer
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update cst_customer
+    <set>
+      <if test="record.custNo != null">
+        cust_no = #{record.custNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.custName != null">
+        cust_name = #{record.custName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.custRegion != null">
+        cust_region = #{record.custRegion,jdbcType=VARCHAR},
+      </if>
+      <if test="record.custManagerId != null">
+        cust_manager_id = #{record.custManagerId,jdbcType=INTEGER},
+      </if>
+      <if test="record.custManagerName != null">
+        cust_manager_name = #{record.custManagerName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.custLevel != null">
+        cust_level = #{record.custLevel,jdbcType=INTEGER},
+      </if>
+      <if test="record.custSatisfy != null">
+        cust_satisfy = #{record.custSatisfy,jdbcType=INTEGER},
+      </if>
+      <if test="record.custCredit != null">
+        cust_credit = #{record.custCredit,jdbcType=INTEGER},
+      </if>
+      <if test="record.custAddr != null">
+        cust_addr = #{record.custAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="record.custZip != null">
+        cust_zip = #{record.custZip,jdbcType=VARCHAR},
+      </if>
+      <if test="record.custTel != null">
+        cust_tel = #{record.custTel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.custFax != null">
+        cust_fax = #{record.custFax,jdbcType=VARCHAR},
+      </if>
+      <if test="record.custWebsite != null">
+        cust_website = #{record.custWebsite,jdbcType=VARCHAR},
+      </if>
+      <if test="record.custLicenceNo != null">
+        cust_licence_no = #{record.custLicenceNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.custChieftain != null">
+        cust_chieftain = #{record.custChieftain,jdbcType=VARCHAR},
+      </if>
+      <if test="record.custBankroll != null">
+        cust_bankroll = #{record.custBankroll,jdbcType=INTEGER},
+      </if>
+      <if test="record.custTurnover != null">
+        cust_turnover = #{record.custTurnover,jdbcType=INTEGER},
+      </if>
+      <if test="record.custBank != null">
+        cust_bank = #{record.custBank,jdbcType=VARCHAR},
+      </if>
+      <if test="record.custBankAccount != null">
+        cust_bank_account = #{record.custBankAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="record.custLocalTaxNo != null">
+        cust_local_tax_no = #{record.custLocalTaxNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.custNationalTaxNo != null">
+        cust_national_tax_no = #{record.custNationalTaxNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.custStatus != null">
+        cust_status = #{record.custStatus,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update cst_customer
+    set cust_no = #{record.custNo,jdbcType=VARCHAR},
+      cust_name = #{record.custName,jdbcType=VARCHAR},
+      cust_region = #{record.custRegion,jdbcType=VARCHAR},
+      cust_manager_id = #{record.custManagerId,jdbcType=INTEGER},
+      cust_manager_name = #{record.custManagerName,jdbcType=VARCHAR},
+      cust_level = #{record.custLevel,jdbcType=INTEGER},
+      cust_satisfy = #{record.custSatisfy,jdbcType=INTEGER},
+      cust_credit = #{record.custCredit,jdbcType=INTEGER},
+      cust_addr = #{record.custAddr,jdbcType=VARCHAR},
+      cust_zip = #{record.custZip,jdbcType=VARCHAR},
+      cust_tel = #{record.custTel,jdbcType=VARCHAR},
+      cust_fax = #{record.custFax,jdbcType=VARCHAR},
+      cust_website = #{record.custWebsite,jdbcType=VARCHAR},
+      cust_licence_no = #{record.custLicenceNo,jdbcType=VARCHAR},
+      cust_chieftain = #{record.custChieftain,jdbcType=VARCHAR},
+      cust_bankroll = #{record.custBankroll,jdbcType=INTEGER},
+      cust_turnover = #{record.custTurnover,jdbcType=INTEGER},
+      cust_bank = #{record.custBank,jdbcType=VARCHAR},
+      cust_bank_account = #{record.custBankAccount,jdbcType=VARCHAR},
+      cust_local_tax_no = #{record.custLocalTaxNo,jdbcType=VARCHAR},
+      cust_national_tax_no = #{record.custNationalTaxNo,jdbcType=VARCHAR},
+      cust_status = #{record.custStatus,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.crm.ssm.entity.CstCustomer">
+    update cst_customer
+    <set>
+      <if test="custName != null">
+        cust_name = #{custName,jdbcType=VARCHAR},
+      </if>
+      <if test="custRegion != null">
+        cust_region = #{custRegion,jdbcType=VARCHAR},
+      </if>
+      <if test="custManagerId != null">
+        cust_manager_id = #{custManagerId,jdbcType=INTEGER},
+      </if>
+      <if test="custManagerName != null">
+        cust_manager_name = #{custManagerName,jdbcType=VARCHAR},
+      </if>
+      <if test="custLevel != null">
+        cust_level = #{custLevel,jdbcType=INTEGER},
+      </if>
+      <if test="custSatisfy != null">
+        cust_satisfy = #{custSatisfy,jdbcType=INTEGER},
+      </if>
+      <if test="custCredit != null">
+        cust_credit = #{custCredit,jdbcType=INTEGER},
+      </if>
+      <if test="custAddr != null">
+        cust_addr = #{custAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="custZip != null">
+        cust_zip = #{custZip,jdbcType=VARCHAR},
+      </if>
+      <if test="custTel != null">
+        cust_tel = #{custTel,jdbcType=VARCHAR},
+      </if>
+      <if test="custFax != null">
+        cust_fax = #{custFax,jdbcType=VARCHAR},
+      </if>
+      <if test="custWebsite != null">
+        cust_website = #{custWebsite,jdbcType=VARCHAR},
+      </if>
+      <if test="custLicenceNo != null">
+        cust_licence_no = #{custLicenceNo,jdbcType=VARCHAR},
+      </if>
+      <if test="custChieftain != null">
+        cust_chieftain = #{custChieftain,jdbcType=VARCHAR},
+      </if>
+      <if test="custBankroll != null">
+        cust_bankroll = #{custBankroll,jdbcType=INTEGER},
+      </if>
+      <if test="custTurnover != null">
+        cust_turnover = #{custTurnover,jdbcType=INTEGER},
+      </if>
+      <if test="custBank != null">
+        cust_bank = #{custBank,jdbcType=VARCHAR},
+      </if>
+      <if test="custBankAccount != null">
+        cust_bank_account = #{custBankAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="custLocalTaxNo != null">
+        cust_local_tax_no = #{custLocalTaxNo,jdbcType=VARCHAR},
+      </if>
+      <if test="custNationalTaxNo != null">
+        cust_national_tax_no = #{custNationalTaxNo,jdbcType=VARCHAR},
+      </if>
+      <if test="custStatus != null">
+        cust_status = #{custStatus,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where cust_no = #{custNo,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.crm.ssm.entity.CstCustomer">
+    update cst_customer
+    set cust_name = #{custName,jdbcType=VARCHAR},
+      cust_region = #{custRegion,jdbcType=VARCHAR},
+      cust_manager_id = #{custManagerId,jdbcType=INTEGER},
+      cust_manager_name = #{custManagerName,jdbcType=VARCHAR},
+      cust_level = #{custLevel,jdbcType=INTEGER},
+      cust_satisfy = #{custSatisfy,jdbcType=INTEGER},
+      cust_credit = #{custCredit,jdbcType=INTEGER},
+      cust_addr = #{custAddr,jdbcType=VARCHAR},
+      cust_zip = #{custZip,jdbcType=VARCHAR},
+      cust_tel = #{custTel,jdbcType=VARCHAR},
+      cust_fax = #{custFax,jdbcType=VARCHAR},
+      cust_website = #{custWebsite,jdbcType=VARCHAR},
+      cust_licence_no = #{custLicenceNo,jdbcType=VARCHAR},
+      cust_chieftain = #{custChieftain,jdbcType=VARCHAR},
+      cust_bankroll = #{custBankroll,jdbcType=INTEGER},
+      cust_turnover = #{custTurnover,jdbcType=INTEGER},
+      cust_bank = #{custBank,jdbcType=VARCHAR},
+      cust_bank_account = #{custBankAccount,jdbcType=VARCHAR},
+      cust_local_tax_no = #{custLocalTaxNo,jdbcType=VARCHAR},
+      cust_national_tax_no = #{custNationalTaxNo,jdbcType=VARCHAR},
+      cust_status = #{custStatus,jdbcType=VARCHAR}
+    where cust_no = #{custNo,jdbcType=VARCHAR}
+  </update>
+</mapper>
